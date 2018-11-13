@@ -249,8 +249,8 @@ The fragment shader is the same simple one.
                 <option value="cube">Cube</option>
                 <option value="sphere">Sphere</option>
             </select>
-            <input type="number" placeholder="x position" id="x-pos-predefined" name="x-pos" min="0"/>
-            <input type="number" placeholder="y position" id="y-pos-predefined" name="y-pos" min="0"/>
+            <input type="number" placeholder="x position" id="x-pos-predefined" name="x-pos"/>
+            <input type="number" placeholder="y position" id="y-pos-predefined" name="y-pos"/>
             <input type="number" placeholder="z position" id="z-pos-predefined" name="z-pos"/>
             <input value="Create Object" id="submit-form" type="submit"/>
         </form>
@@ -259,8 +259,8 @@ The fragment shader is the same simple one.
         <p>or load an object yourself:
 		<form id="object-form" method="POST" enctype="multipart/form-data">
             <input type="file" id="obj-file" name="file">
-            <input type="number" placeholder="x position" id="x-pos" name="x-pos" min="0"/>
-            <input type="number" placeholder="y position" id="y-pos" name="y-pos" min="0"/>
+            <input type="number" placeholder="x position" id="x-pos" name="x-pos"/>
+            <input type="number" placeholder="y position" id="y-pos" name="y-pos"/>
             <input type="number" placeholder="z position" id="z-pos" name="z-pos"/>
             <input value="Create Object" id="submit-form" type="submit"/>
         </form>
@@ -274,6 +274,7 @@ The fragment shader is the same simple one.
         </select>
         
         </p>
+        <p> You can move the camera with WASD </p>
         <p>
 		
 		<button id="reset-button">Reset</button>

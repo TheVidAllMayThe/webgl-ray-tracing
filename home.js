@@ -25,7 +25,7 @@ var shaderProgram = null;
 var file = null;
 
 var triangleVertexPositionBuffer = null;
-	
+
 var triangleVertexNormalBuffer = null;	
 
 // The GLOBAL transformation parameters
@@ -45,7 +45,7 @@ var globalRotationYY_SPEED = 1;
 // To allow choosing the way of drawing the model triangles
 
 var primitiveType = null;
- 
+
 // To allow choosing the projection type
 
 var projectionType = 0;
@@ -395,6 +395,8 @@ function animate() {
 function tick() {
 	
 	requestAnimFrame(tick);
+
+    handleKeys();
 	
 	drawScene();
 	
@@ -412,8 +414,27 @@ function outputInfos(){
 }
 
 //----------------------------------------------------------------------------
+var currentlyPressedKeys = {};
+
+function handleKeys() {
+	if (currentlyPressedKeys[33]) {
+		
+		// Page Up
+		
+		sx *= 0.9;
+		
+		sz = sy = sx;
+	}
+}
 
 function setEventListeners(){
+    document.onkeydown = function(event){
+        currentlyPressedKeys[event.keyCode] = true;
+    }
+
+    document.onkeyup = function(event){
+        currentlyPressedKeys[event.keyCode] = false;
+    }
 	
     // Dropdown list
 	
@@ -449,8 +470,9 @@ function setEventListeners(){
                 break;
         }
         
-        model.tx = document.getElementById("x-pos-predefined").value/width;
-        model.ty = document.getElementById("y-pos-predefined").value/height;
+        model.tx = document.getElementById("x-pos-predefined").value;
+        console.log(model.tx);
+        model.ty = document.getElementById("y-pos-predefined").value;
         model.tz = document.getElementById("z-pos-predefined").value;
                     
         // To render the model just read
@@ -530,8 +552,8 @@ function setEventListeners(){
                 computeVertexNormals( model.vertices, model.normals );
             }
 
-            model.tx = document.getElementById("x-pos").value/width;
-            model.ty = document.getElementById("y-pos").value/height;
+            model.tx = document.getElementById("x-pos").value;
+            model.ty = document.getElementById("y-pos").value;
             model.tz = document.getElementById("z-pos").value;
                         
             // To render the model just read
@@ -594,13 +616,6 @@ function initWebGL( canvas ) {
 function runWebGL() {
 	
 	var canvas = document.getElementById("my-canvas");
-    width = canvas.width;
-    height = canvas.height;
-    document.getElementById("x-pos").max = width;
-    document.getElementById("y-pos").max = height;
-    document.getElementById("x-pos-predefined").max = width;
-    document.getElementById("y-pos-predefined").max = height;
-	
 	initWebGL( canvas );
 
 	shaderProgram = initShaders( gl );

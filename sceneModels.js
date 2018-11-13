@@ -40,11 +40,11 @@ function emptyModelFeatures() {
 
 	// Scaling factors
 	
-	this.sx = 1.0;
+	this.sx = 0.1;
 	
-	this.sy = 1.0;
+	this.sy = 0.1;
 	
-	this.sz = 1.0;		
+	this.sz = 0.1;		
 	
 	// Animation controls
 	
