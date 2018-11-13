@@ -109,6 +109,9 @@ function singleTriangleModel( ) {
 }
 
 
+
+
+
 function simpleCubeModel( ) {
 	
 	var cube = new emptyModelFeatures();
@@ -223,9 +226,30 @@ function sphereModel( subdivisionDepth = 2 ) {
 }
 
 
+function simpleSquareModel( ) {
+
+	var square = new emptyModelFeatures();
+
+	square.vertices = [
+		-1.0, 0.0, -1.0,
+		-1.0, 0.0,  1.0,
+		 1.0, 0.0, -1.0,
+
+		 1.0, 0.0, -1.0,
+		-1.0, 0.0,  1.0,
+		 1.0, 0.0,  1.0 
+	]
+
+	computeVertexNormals( square.vertices, square.normals)
+
+	return square
+}
+
+
 //----------------------------------------------------------------------------
 //
 //  Instantiating scene models
 //
 
 var sceneModels = [];
+
