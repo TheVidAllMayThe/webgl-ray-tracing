@@ -435,6 +435,30 @@ function setEventListeners(){
 		}  	
 	});      
 
+    document.getElementById("object-form-predefined").onsubmit = function(evt){
+        evt.preventDefault();
+
+        var model = null;
+
+        console.log(document);
+        var p = document.getElementById("object-type").selectedIndex;
+        switch(p) {
+            case 0: model = new cubeModel();
+                break;
+            case 1: model = new sphereModel();
+                break;
+        }
+        
+        model.tx = document.getElementById("x-pos-predefined").value/width;
+        model.ty = document.getElementById("y-pos-predefined").value/height;
+        model.tz = document.getElementById("z-pos-predefined").value;
+                    
+        // To render the model just read
+    
+        sceneModels.push(model);
+        
+    }
+
 	document.getElementById("obj-file").onchange = function(){
         file = this.files[0];
 	}
@@ -494,7 +518,6 @@ function setEventListeners(){
                         
             // Assigning to the current model
             var model = new emptyModelFeatures();
-            console.log(model)
             
             model.vertices = newVertices.slice();
             
@@ -573,8 +596,10 @@ function runWebGL() {
 	var canvas = document.getElementById("my-canvas");
     width = canvas.width;
     height = canvas.height;
-    document.getElementById("x-pos").max = canvas.width;
-    document.getElementById("y-pos").max = canvas.height;
+    document.getElementById("x-pos").max = width;
+    document.getElementById("y-pos").max = height;
+    document.getElementById("x-pos-predefined").max = width;
+    document.getElementById("y-pos-predefined").max = height;
 	
 	initWebGL( canvas );
 

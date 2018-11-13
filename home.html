@@ -243,14 +243,26 @@ The fragment shader is the same simple one.
 
 		<p>Hi! Welcome to our Ray Tracing project, please help us out by filling the empty canvas above!</p>
 
+        <p>Add an object:
+		<form id="object-form-predefined">
+            <select id="object-type" name="object-type">
+                <option value="cube">Cube</option>
+                <option value="sphere">Sphere</option>
+            </select>
+            <input type="number" placeholder="x position" id="x-pos-predefined" name="x-pos" min="0"/>
+            <input type="number" placeholder="y position" id="y-pos-predefined" name="y-pos" min="0"/>
+            <input type="number" placeholder="z position" id="z-pos-predefined" name="z-pos"/>
+            <input value="Create Object" id="submit-form" type="submit"/>
+        </form>
+		</p>
         
-        <p>Load an object:
+        <p>or load an object yourself:
 		<form id="object-form" method="POST" enctype="multipart/form-data">
-		<input type="file" id="obj-file" name="file">
-		<input type="number" placeholder="x position" id="x-pos" name="x-pos" min="0"/>
-		<input type="number" placeholder="y position" id="y-pos" name="y-pos" min="0"/>
-		<input type="number" placeholder="z position" id="z-pos" name="z-pos" min="0" max="1000"/>
-        <input value="Create Object" id="submit-form" type="submit"/>
+            <input type="file" id="obj-file" name="file">
+            <input type="number" placeholder="x position" id="x-pos" name="x-pos" min="0"/>
+            <input type="number" placeholder="y position" id="y-pos" name="y-pos" min="0"/>
+            <input type="number" placeholder="z position" id="z-pos" name="z-pos"/>
+            <input value="Create Object" id="submit-form" type="submit"/>
         </form>
 		</p>
 
