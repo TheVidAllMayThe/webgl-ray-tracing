@@ -20,6 +20,8 @@ function emptyModelFeatures() {
 
 	this.normals = [];
 
+    this.colors = [];
+
 	// Transformation parameters
 
 	// Displacement vector

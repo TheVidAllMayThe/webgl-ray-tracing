@@ -28,6 +28,8 @@ var triangleVertexPositionBuffer = null;
 
 var triangleVertexNormalBuffer = null;	
 
+var triangleVertexColorBuffer = null;
+
 // The GLOBAL transformation parameters
 
 var globalAngleYY = 0.0;
@@ -48,7 +50,7 @@ var primitiveType = null;
 
 // To allow choosing the projection type
 
-var projectionType = 0;
+var projectionType = 1;
 
 // NEW --- The viewer position
 
@@ -110,6 +112,19 @@ function initBuffers( model ) {
 	gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, 
 			triangleVertexNormalBuffer.itemSize, 
 			gl.FLOAT, false, 0, 0);	
+
+    // Colors
+    triangleVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.colors), gl.STATIC_DRAW);
+    triangleVertexColorBuffer.itemSize = 3;
+    triangleVertexColorBuffer.numItems = model.colors.length / 3;
+
+    // Associating to the vertex shader
+    
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+            triangleVertexColorBuffer.itemSize,
+            gl.FLOAT, false, 0 , 0);
 }
 
 //----------------------------------------------------------------------------
@@ -239,9 +254,9 @@ function drawScene() {
 		
 		// NEW --- The viewer is on the ZZ axis at an indefinite distance
 		
-		pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[3] = 0.0;
+		//pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[3] = 0.0;
 		
-		pos_Viewer[2] = 1.0;  
+		//pos_Viewer[2] = 1.0;  
 		
 		// TO BE DONE !
 		
@@ -255,7 +270,7 @@ function drawScene() {
 		
 		// Ensure that the model is "inside" the view volume
 		
-		pMatrix = perspective( 45, 1, 0.05, 15 );
+		pMatrix = perspective( 45, width/height, 0.05, 15 );
 		
 		// Global transformation !!
 		
@@ -417,14 +432,22 @@ function outputInfos(){
 var currentlyPressedKeys = {};
 
 function handleKeys() {
-	if (currentlyPressedKeys[33]) {
-		
-		// Page Up
-		
-		sx *= 0.9;
-		
-		sz = sy = sx;
+    //W
+	if (currentlyPressedKeys[87]) {
+        pos_Viewer[2] -= 0.1; 
 	}
+    //A
+    if (currentlyPressedKeys[65]) {
+        pos_Viewer[0] -= 0.1; 
+    }
+    //S
+    if (currentlyPressedKeys[83]) {
+        pos_Viewer[2] += 0.1; 
+    }
+    //D
+    if (currentlyPressedKeys[68]) {
+        pos_Viewer[0] += 0.1; 
+    }
 }
 
 function setEventListeners(){
@@ -617,6 +640,8 @@ function runWebGL() {
 	
 	var canvas = document.getElementById("my-canvas");
 	initWebGL( canvas );
+    height = canvas.height;
+    width = canvas.width;
 
 	shaderProgram = initShaders( gl );
 	
