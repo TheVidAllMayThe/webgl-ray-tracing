@@ -118,7 +118,6 @@ The fragment shader is the same simple one.
         
 			vec4 ambient = vec4( k_ambient * allLights[i].ambientIntensities, 1.0 );
 	   
-			fColor += ambient;
 		
            // vector from vertex position to light source
     
@@ -186,7 +185,7 @@ The fragment shader is the same simple one.
 
 		   // Adding the components
 		
-           fColor += diffuse + specular + vec4(vColor, 1.0);
+           fColor = ambient + diffuse + specular + vec4(vColor, 1.0);
 	   }
 	}
     
@@ -253,14 +252,9 @@ The fragment shader is the same simple one.
                 <option value="cube">Cube</option>
                 <option value="sphere">Sphere</option>
             </select>
-            <select id="object-color" name="object-color">
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="red">Red</option>
-                <option value="yellow">Yellow</option>
-                <option value="black">Black</option>
-                <option value="white">White</option>
-            </select>
+            <input type="number" placeholder="r" id ="r-object" name="r-object" min="0" max="255"/>
+            <input type="number" placeholder="g" id ="g-object" name="g-object" min="0" max="255"/>
+            <input type="number" placeholder="b" id ="b-object" name="b-object" min="0" max="255"/>
             <input type="number" placeholder="x position" id="x-pos-predefined" name="x-pos"/>
             <input type="number" placeholder="y position" id="y-pos-predefined" name="y-pos"/>
             <input type="number" placeholder="z position" id="z-pos-predefined" name="z-pos"/>
@@ -274,6 +268,22 @@ The fragment shader is the same simple one.
             <input type="number" placeholder="x position" id="x-pos" name="x-pos"/>
             <input type="number" placeholder="y position" id="y-pos" name="y-pos"/>
             <input type="number" placeholder="z position" id="z-pos" name="z-pos"/>
+            <input value="Create Object" id="submit-form" type="submit"/>
+        </form>
+		</p>
+
+        <p>Add a light:
+		<form id="light-form">
+            <select id="light-type" name="light-type">
+                <option value="vectorial">Vectorial</option>
+                <option value="directional">Directional</option>
+            </select>
+            <input type="number" placeholder="r" id ="r-light" name="r-light" min="0" max="255"/>
+            <input type="number" placeholder="g" id ="g-light" name="g-light" min="0" max="255"/>
+            <input type="number" placeholder="b" id ="b-light" name="b-light" min="0" max="255"/>
+            <input type="number" placeholder="x position" id="x-pos-light" name="x-pos"/>
+            <input type="number" placeholder="y position" id="y-pos-light" name="y-pos"/>
+            <input type="number" placeholder="z position" id="z-pos-light" name="z-pos"/>
             <input value="Create Object" id="submit-form" type="submit"/>
         </form>
 		</p>

@@ -484,22 +484,8 @@ function setEventListeners(){
         }
 
         model.colors = [];
-        var colorArray = null;
-        var c = document.getElementById("object-color").selectedIndex;
-        switch(c) {
-            case 0: colorArray = [0.0, 0.0, 1.0];
-                break;
-            case 1: colorArray = [0.0, 1.0, 0.0];
-                break;
-            case 2: colorArray = [1.0, 0.0, 0.0];
-                break;
-            case 3: colorArray = [1.0, 1.0, 0.0];
-                break;
-            case 4: colorArray = [1.0, 1.0, 1.0];
-                break;
-            case 5: colorArray = [0.0, 0.0, 0.0];
-                break;
-        }
+        var colorArray = [document.getElementById("r-object").value/255, document.getElementById("g-object").value/255, document.getElementById("b-object").value/255];
+        console.log(colorArray);
         
         while(model.colors.length < model.vertices.length){
             model.colors = model.colors.concat(colorArray);
@@ -510,6 +496,21 @@ function setEventListeners(){
         model.tz = document.getElementById("z-pos-predefined").value;
                     
         sceneModels.push(model);
+        
+    }
+
+    document.getElementById("light-form").onsubmit = function(evt){
+        evt.preventDefault();
+
+        var lightSource = newLightSource;
+
+        lightSource.setPosition( document.getElementById("x-pos-light"), document.getElementById("y-pos-light"), document.getElementById("z-pos-light"), document.getElementById("light-type").selectedIndex );
+
+        lightSource.setIntensity( document.getElementyById("r-light").value/255 , document.getElementyById("g-light").value/255 ,document.getElementyById("b-light").value/255 );
+
+        lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
+
+        lightSources.push( lightSource );
         
     }
 
