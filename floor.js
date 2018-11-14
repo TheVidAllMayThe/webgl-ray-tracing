@@ -1,18 +1,48 @@
-for(let i = 0; i< 50; i++){
-        sceneModels.push(new simpleSquareModel())
-        sceneModels[i].rotXXOn = false
-        sceneModels[i].rotYYOn = false
-        sceneModels[i].rotZZOn = false
-        sceneModels[i].sx = sceneModels[i].sy = sceneModels[i].sz = 0.24
-        sceneModels[i].ty = -1.0
-        sceneModels[i].tz = i < 25 ? - 0.5 * (25 - i) : 0.5 * (i - 25)
-}
+floor = new emptyModelFeatures();
+floor.rotXXOn = false
+floor.rotYYOn = false
+floor.rotZZOn = false
+floor.sx = floor.sy = floor.sz = 1.0
 
 /*
-sq = new simpleSquareModel()
-sq.rotXXOn = false
-sq.rotYYOn = false
-sq.rotZZOn = false
+for(let i = -25; i< 25; i++){
+    tmpsq = new simpleSquareModel()
+    for(let indx = 0; indx < tmpsq.vertices.length/3; indx++){
+        tmpsq.vertices[indx*3] *= 0.24
+        tmpsq.vertices[indx*3 + 1] *= 0.24
+        tmpsq.vertices[indx*3 + 2] *= 0.24
+        //tmpsq.vertices[indx*3] += k * 0.5
+        tmpsq.vertices[indx*3 + 1] += -1.0
+        tmpsq.vertices[indx*3 + 2] += i * 0.5
+        
+        tmpsq.colors[indx*3] = tmpsq.colors[indx*3 + 1] = tmpsq.colors[indx*3 + 2] = (i%2) ? 0.0 : 0.5 
+    }
+    floor.vertices = floor.vertices.concat(tmpsq.vertices)
+    floor.colors = floor.colors.concat(tmpsq.colors)
 
-sceneModels.push(sq)
+}
 */
+
+for(let i = -25; i< 25; i++){
+    for(let k = -25; k< 25; k++){
+        tmpsq = new simpleSquareModel()
+        for(let indx = 0; indx < tmpsq.vertices.length/3; indx++){
+            tmpsq.vertices[indx*3] *= 0.24
+            tmpsq.vertices[indx*3 + 1] *= 0.24
+            tmpsq.vertices[indx*3 + 2] *= 0.24
+            tmpsq.vertices[indx*3] += k * 0.5
+            tmpsq.vertices[indx*3 + 1] += -1.0
+            tmpsq.vertices[indx*3 + 2] += i * 0.5
+            
+            tmpsq.colors[indx*3] = tmpsq.colors[indx*3 + 1] = tmpsq.colors[indx*3 + 2] = (i%2) ? 0.0 : 0.5 
+        }
+        floor.vertices = floor.vertices.concat(tmpsq.vertices)
+        floor.colors = floor.colors.concat(tmpsq.colors)
+    }
+}
+
+console.log(floor.vertices)
+
+computeVertexNormals( floor.vertices, floor.normals)
+sceneModels.push(floor)
+

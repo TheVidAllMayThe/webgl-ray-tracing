@@ -265,10 +265,20 @@ function simpleSquareModel( ) {
 		-1.0, 0.0,  1.0,
 		 1.0, 0.0,  1.0 
 	]
-
+	/*
+	square.colors = [
+		 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0,
+		 1.0, 1.0, 1.0	
+	]*/
+	
 	while(square.colors.length < square.vertices.length){
-		square.colors.push(1.0)
+		square.colors.push(0.0)
 	}
+	
 
 	computeVertexNormals( square.vertices, square.normals)
 
