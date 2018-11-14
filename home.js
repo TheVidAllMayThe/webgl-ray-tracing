@@ -453,34 +453,28 @@ function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
 		globalTz += 0.1;
-		console.log('W') 
 	}
     //A
     if (currentlyPressedKeys[65]) {
         globalTx += 0.1;
-		console.log('A')
 	}
     //S
     if (currentlyPressedKeys[83]) {
 		globalTz -= 0.1;
-		console.log('S') 
     }
     //D
     if (currentlyPressedKeys[68]) {
 		globalTx -= 0.1;
-		console.log('D') 
 	}
 	
 	//E
 	if (currentlyPressedKeys[69]) {
 		globalTy -= 0.1;
-		console.log('E') 
 	}
 
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
-		console.log('Q') 
     }
 }
 
@@ -535,7 +529,6 @@ function setEventListeners(canvas){
 
         model.colors = [];
         var colorArray = [document.getElementById("r-object").value/255, document.getElementById("g-object").value/255, document.getElementById("b-object").value/255];
-        console.log(colorArray);
         
         while(model.colors.length < model.vertices.length){
             model.colors = model.colors.concat(colorArray);
@@ -561,7 +554,6 @@ function setEventListeners(canvas){
         lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
 
         lightSources.push( lightSource );
-        console.log(lightSources);
         
     }
 
