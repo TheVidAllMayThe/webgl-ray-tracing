@@ -387,6 +387,20 @@ function animate() {
 		
 				lightSources[i].setRotAngleYY( angle );
 			}
+
+			if( lightSources[i].isRotXXOn() ) {
+
+				var angle = lightSources[i].getRotAngleXX() + lightSources[i].getRotationSpeed() * (90 * elapsed) / 1000.0;
+		
+				lightSources[i].setRotAngleXX( angle );
+			}
+
+			if( lightSources[i].isRotZZOn() ) {
+
+				var angle = lightSources[i].getRotAngleZZ() + lightSources[i].getRotationSpeed() * (90 * elapsed) / 1000.0;
+		
+				lightSources[i].setRotAngleZZ( angle );
+			}
 		}
 }
 	
@@ -502,15 +516,16 @@ function setEventListeners(){
     document.getElementById("light-form").onsubmit = function(evt){
         evt.preventDefault();
 
-        var lightSource = newLightSource;
+        var lightSource = new LightSource();
 
-        lightSource.setPosition( document.getElementById("x-pos-light"), document.getElementById("y-pos-light"), document.getElementById("z-pos-light"), document.getElementById("light-type").selectedIndex );
+        lightSource.setPosition( document.getElementById("x-pos-light").value , document.getElementById("y-pos-light").value, document.getElementById("z-pos-light").value, document.getElementById("light-type").selectedIndex );
 
-        lightSource.setIntensity( document.getElementyById("r-light").value/255 , document.getElementyById("g-light").value/255 ,document.getElementyById("b-light").value/255 );
+        lightSource.setIntensity( document.getElementById("r-light").value/255 , document.getElementById("g-light").value/255 ,document.getElementById("b-light").value/255 );
 
         lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
 
         lightSources.push( lightSource );
+        console.log(lightSources);
         
     }
 
