@@ -96,6 +96,10 @@ function singleTriangleModel( ) {
 		 0.5,  0.5,  0.5,
 	];
 
+	while(triangle.colors.length < triangle.vertices.length){
+		triangle.colors.push(0.0)
+	}
+
 	triangle.normals = [
 
 		// FRONTAL TRIANGLE
@@ -109,6 +113,9 @@ function singleTriangleModel( ) {
 
 	return triangle;
 }
+
+
+
 
 
 function simpleCubeModel( ) {
@@ -155,6 +162,10 @@ function simpleCubeModel( ) {
 		 1.000000, -1.000000,  1.000000, 	 
 	];
 
+	while(cube.colors.length < cube.vertices.length){
+		cube.colors.push(0.0)
+	}
+
 	computeVertexNormals( cube.vertices, cube.normals );
 
 	return cube;
@@ -167,6 +178,10 @@ function cubeModel( subdivisionDepth = 0 ) {
 	
 	midPointRefinement( cube.vertices, subdivisionDepth );
 	
+	while(cube.colors.length < cube.vertices.length){
+		cube.colors.push(0.0)
+	}
+
 	computeVertexNormals( cube.vertices, cube.normals );
 	
 	return cube;
@@ -192,6 +207,10 @@ function simpleTetrahedronModel( ) {
          1.000000,  0.000000, -0.707000, 
          0.000000, -1.000000,  0.707000,
 	];
+	
+	while(tetra.colors.length < tetra.vertices.length){
+		tetra.colors.push(0.0)
+	}
 
 	computeVertexNormals( tetra.vertices, tetra.normals );
 
@@ -205,6 +224,10 @@ function tetrahedronModel( subdivisionDepth = 0 ) {
 	
 	midPointRefinement( tetra.vertices, subdivisionDepth );
 	
+	while(tetra.colors.length < tetra.vertices.length){
+		tetra.colors.push(0.0)
+	}
+
 	computeVertexNormals( tetra.vertices, tetra.normals );
 	
 	return tetra;
@@ -219,9 +242,37 @@ function sphereModel( subdivisionDepth = 2 ) {
 	
 	moveToSphericalSurface( sphere.vertices )
 	
+	while(sphere.colors.length < sphere.vertices.length){
+		sphere.colors.push(0.0)
+	}
+
 	computeVertexNormals( sphere.vertices, sphere.normals );
 	
 	return sphere;
+}
+
+
+function simpleSquareModel( ) {
+
+	var square = new emptyModelFeatures();
+
+	square.vertices = [
+		-1.0, 0.0, -1.0,
+		-1.0, 0.0,  1.0,
+		 1.0, 0.0, -1.0,
+
+		 1.0, 0.0, -1.0,
+		-1.0, 0.0,  1.0,
+		 1.0, 0.0,  1.0 
+	]
+
+	while(square.colors.length < square.vertices.length){
+		square.colors.push(1.0)
+	}
+
+	computeVertexNormals( square.vertices, square.normals)
+
+	return square
 }
 
 
@@ -231,3 +282,4 @@ function sphereModel( subdivisionDepth = 2 ) {
 //
 
 var sceneModels = [];
+

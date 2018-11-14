@@ -26,6 +26,8 @@ var file = null;
 
 var triangleVertexPositionBuffer = null;
 
+var triangleVertexColorBuffer = null;
+
 var triangleVertexNormalBuffer = null;	
 
 var triangleVertexColorBuffer = null;
@@ -186,7 +188,7 @@ function drawModel( model,
 	gl.uniform1i( gl.getUniformLocation(shaderProgram, "numLights"), 
 		numLights );
 
-	//Light Sources
+
 	
 	for(var i = 0; i < lightSources.length; i++ )
 	{
