@@ -187,6 +187,8 @@ The fragment shader is the same simple one.
 		
            fColor += ambient + diffuse + specular + vec4(vColor, 1.0);
 	   }
+       if (numLights == 0) fColor = vec4(vColor, 1.0); 
+        
 	}
     
 </script>
