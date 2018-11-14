@@ -30,8 +30,6 @@ var triangleVertexColorBuffer = null;
 
 var triangleVertexNormalBuffer = null;	
 
-var triangleVertexColorBuffer = null;
-
 // The GLOBAL transformation parameters
 
 var globalAngleYY = 0.0;
@@ -169,7 +167,7 @@ function drawModel( model,
 	
 	// Material properties
 	
-	gl.uniform3fv( gl.getUniformLocation(shaderProgram, "k_ambient"), 
+    gl.uniform3fv( gl.getUniformLocation(shaderProgram, "k_ambient"), 
 		flatten(model.kAmbi) );
     
     gl.uniform3fv( gl.getUniformLocation(shaderProgram, "k_diffuse"),
@@ -201,31 +199,8 @@ function drawModel( model,
 		gl.uniform3fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].intensities"),
 			flatten(lightSources[i].getIntensity()) );
     }
-        
 	// Drawing 
-	
-	// primitiveType allows drawing as filled triangles / wireframe / vertices
-	
-	if( primitiveType == gl.LINE_LOOP ) {
-		
-		// To simulate wireframe drawing!
-		
-		// No faces are defined! There are no hidden lines!
-		
-		// Taking the vertices 3 by 3 and drawing a LINE_LOOP
-		
-		var i;
-		
-		for( i = 0; i < triangleVertexPositionBuffer.numItems / 3; i++ ) {
-		
-			gl.drawArrays( primitiveType, 3 * i, 3 ); 
-		}
-	}	
-	else {
-				
-		gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems); 
-		
-	}	
+    gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems); 
 }
 
 //----------------------------------------------------------------------------
@@ -323,6 +298,20 @@ function drawScene() {
 				lightSourceMatrix = mult( 
 						lightSourceMatrix, 
 						rotationYYMatrix( lightSources[i].getRotAngleYY() ) );
+			}
+
+			if( lightSources[i].isRotXXOn() ) 
+			{
+				lightSourceMatrix = mult( 
+						lightSourceMatrix, 
+						rotationYYMatrix( lightSources[i].getRotAngleXX() ) );
+			}
+
+			if( lightSources[i].isRotZZOn() ) 
+			{
+				lightSourceMatrix = mult( 
+						lightSourceMatrix, 
+						rotationYYMatrix( lightSources[i].getRotAngleZZ() ) );
 			}
 		}
 		
@@ -486,22 +475,40 @@ function setEventListeners(){
 
         var model = null;
 
-        console.log(document);
-        var p = document.getElementById("object-type").selectedIndex;
-        switch(p) {
+        var t = document.getElementById("object-type").selectedIndex;
+        switch(t) {
             case 0: model = new cubeModel();
                 break;
             case 1: model = new sphereModel();
                 break;
         }
+
+        model.colors = [];
+        var colorArray = null;
+        var c = document.getElementById("object-color").selectedIndex;
+        switch(c) {
+            case 0: colorArray = [0.0, 0.0, 1.0];
+                break;
+            case 1: colorArray = [0.0, 1.0, 0.0];
+                break;
+            case 2: colorArray = [1.0, 0.0, 0.0];
+                break;
+            case 3: colorArray = [1.0, 1.0, 0.0];
+                break;
+            case 4: colorArray = [1.0, 1.0, 1.0];
+                break;
+            case 5: colorArray = [0.0, 0.0, 0.0];
+                break;
+        }
+        
+        while(model.colors.length < model.vertices.length){
+            model.colors = model.colors.concat(colorArray);
+        }
         
         model.tx = document.getElementById("x-pos-predefined").value;
-        console.log(model.tx);
         model.ty = document.getElementById("y-pos-predefined").value;
         model.tz = document.getElementById("z-pos-predefined").value;
                     
-        // To render the model just read
-    
         sceneModels.push(model);
         
     }

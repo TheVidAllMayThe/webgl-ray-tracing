@@ -79,7 +79,8 @@ function initShaders( gl ) {
 	
 	// Vertex Color
 
-	shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+	shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "vColor");
+    console.log(shaderProgram.vertexColorAttribute);
 	gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
 	
 	return shaderProgram;

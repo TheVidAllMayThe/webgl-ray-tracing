@@ -124,6 +124,16 @@ LightSource.prototype.isRotYYOn = function() {
 	return this.rotYYOn;
 }
 
+LightSource.prototype.isRotXXOn = function() {
+	
+	return this.rotXXOn;
+}
+
+LightSource.prototype.isRotZZOn = function() {
+	
+	return this.rotZZOn;
+}
+
 LightSource.prototype.switchRotYYOn = function() {
 	
 	this.rotYYOn = true;
@@ -134,6 +144,26 @@ LightSource.prototype.switchRotYYOff = function() {
 	this.rotYYOn = false;
 }
 
+LightSource.prototype.switchRotXXOn = function() {
+	
+	this.rotXXOn = true;
+}
+
+LightSource.prototype.switchRotXXOff = function() {
+	
+	this.rotXXOn = false;
+}
+
+LightSource.prototype.switchRotZZOn = function() {
+	
+	this.rotZZOn = true;
+}
+
+LightSource.prototype.switchRotZZOff = function() {
+	
+	this.rotZZOn = false;
+}
+
 LightSource.prototype.getRotAngleYY = function() {
 	
 	return this.rotAngleYY;
@@ -142,6 +172,26 @@ LightSource.prototype.getRotAngleYY = function() {
 LightSource.prototype.setRotAngleYY = function( angle ) {
 	
 	this.rotAngleYY = angle;
+}
+
+LightSource.prototype.getRotAngleXX = function() {
+	
+	return this.rotAngleXX;
+}
+
+LightSource.prototype.setRotAngleXX = function( angle ) {
+	
+	this.rotAngleXX = angle;
+}
+
+LightSource.prototype.getRotAngleZZ = function() {
+	
+	return this.rotAngleZZ;
+}
+
+LightSource.prototype.setRotAngleZZ = function( angle ) {
+	
+	this.rotAngleZZ = angle;
 }
 
 LightSource.prototype.getRotationSpeed = function() {
@@ -170,7 +220,7 @@ lightSources.push( new LightSource() );
 
 lightSources[0].setPosition( -1.0, 1.0, 1.0, 0.0 );
 
-lightSources[0].setIntensity( 1.0, 0.0, 0.0 );
+lightSources[0].setIntensity( 0.3, 0.0, 0.0 );
 
 lightSources[0].setAmbIntensity( 0.2, 0.0, 0.0 );
 
@@ -184,7 +234,7 @@ lightSources.push( new LightSource() );
 
 lightSources[1].setPosition( 10.0, 10.0, 10.0, 1.0 );
 
-lightSources[1].setIntensity( 0.0, 0.0, 1.0 );
+lightSources[1].setIntensity( 0.0, 0.0, 0.3 );
 
 lightSources[1].setAmbIntensity( 0.0, 0.0, 0.2 );
 
