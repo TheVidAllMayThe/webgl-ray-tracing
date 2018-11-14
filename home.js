@@ -34,7 +34,12 @@ var triangleVertexNormalBuffer = null;
 
 var globalAngleYY = 0.0;
 
+
 var globalTz = 0.0;
+
+var globalTx = 0.0;
+
+var globalTy = 0.0;
 
 // GLOBAL Animation controls
 
@@ -247,11 +252,11 @@ function drawScene() {
 		
 		// Ensure that the model is "inside" the view volume
 		
-		pMatrix = perspective( 45, width/height, 0.05, 15 );
+		pMatrix = perspective( 45, width/height, 0.05, 200 );
 		
 		// Global transformation !!
 		
-		globalTz = -2.5;
+		//globalTz = -2.5;
 
 		// NEW --- The viewer is on (0,0,0)
 		
@@ -277,7 +282,7 @@ function drawScene() {
 	
 	// GLOBAL TRANSFORMATION FOR THE WHOLE SCENE
 	
-	mvMatrix = translationMatrix( 0, 0, globalTz );
+	mvMatrix = translationMatrix( globalTx, globalTy, globalTz );
 	
 	// NEW - Updating the position of the light sources, if required
 	
@@ -425,19 +430,35 @@ var currentlyPressedKeys = {};
 function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
-        pos_Viewer[2] -= 0.1; 
+		globalTz += 0.1;
+		console.log('W') 
 	}
     //A
     if (currentlyPressedKeys[65]) {
-        pos_Viewer[0] -= 0.1; 
-    }
+        globalTx += 0.1;
+		console.log('A')
+	}
     //S
     if (currentlyPressedKeys[83]) {
-        pos_Viewer[2] += 0.1; 
+		globalTz -= 0.1;
+		console.log('S') 
     }
     //D
     if (currentlyPressedKeys[68]) {
-        pos_Viewer[0] += 0.1; 
+		globalTx -= 0.1;
+		console.log('D') 
+	}
+	
+	//E
+	if (currentlyPressedKeys[69]) {
+		globalTy -= 0.1;
+		console.log('E') 
+	}
+
+	//Q
+	if (currentlyPressedKeys[81]) {
+		globalTy += 0.1;
+		console.log('Q') 
     }
 }
 
@@ -658,6 +679,7 @@ function runWebGL() {
 	setEventListeners();
 	
 	tick();		// A timer controls the rendering / animation    
+
 
 	outputInfos();
 }
