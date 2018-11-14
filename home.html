@@ -185,7 +185,7 @@ The fragment shader is the same simple one.
 
 		   // Adding the components
 		
-           fColor = ambient + diffuse + specular + vec4(vColor, 1.0);
+           fColor += ambient + diffuse + specular + vec4(vColor, 1.0);
 	   }
 	}
     
@@ -275,8 +275,8 @@ The fragment shader is the same simple one.
         <p>Add a light:
 		<form id="light-form">
             <select id="light-type" name="light-type">
-                <option value="vectorial">Vectorial</option>
                 <option value="directional">Directional</option>
+                <option value="vectorial">Vectorial</option>
             </select>
             <input type="number" placeholder="r" id ="r-light" name="r-light" min="0" max="255"/>
             <input type="number" placeholder="g" id ="g-light" name="g-light" min="0" max="255"/>
