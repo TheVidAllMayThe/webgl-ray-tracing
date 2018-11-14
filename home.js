@@ -626,7 +626,11 @@ function setEventListeners(canvas){
             model.tz = document.getElementById("z-pos").value;
                         
             // To render the model just read
-        
+			console.log(model.vertices)
+			while(model.vertices.length > model.colors.length){
+				model.colors.push(0.0)
+			}
+			console.log(model.colors)
             sceneModels.push(model);
         };
         
