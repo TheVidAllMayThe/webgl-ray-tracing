@@ -34,6 +34,10 @@ var triangleVertexNormalBuffer = null;
 
 var globalAngleYY = 0.0;
 
+var globalAngleXX = 0.0;
+
+var globalAngleZZ = 0.0;
+
 
 var globalTz = 0.0;
 
@@ -282,8 +286,12 @@ function drawScene() {
 	
 	// GLOBAL TRANSFORMATION FOR THE WHOLE SCENE
 	
-	mvMatrix = translationMatrix( globalTx, globalTy, globalTz );
-	
+	mvMatrix = mult( translationMatrix( globalTx, globalTy, globalTz ),
+		rotationYYMatrix( globalAngleYY ) );
+
+	mvMatrix = mult(rotationXXMatrix(globalAngleXX), mvMatrix)
+
+	mvMatrix = mult(rotationZZMatrix(globalAngleZZ), mvMatrix)
 	// NEW - Updating the position of the light sources, if required
 	
 	// FOR EACH LIGHT SOURCE
@@ -462,7 +470,14 @@ function handleKeys() {
     }
 }
 
-function setEventListeners(){
+function setEventListeners(canvas){
+
+	canvas.onmousedown = handleMouseDown;
+    
+    document.onmouseup = handleMouseUp;
+    
+    document.onmousemove = handleMouseMove;
+
     document.onkeydown = function(event){
         currentlyPressedKeys[event.keyCode] = true;
     }
@@ -620,6 +635,64 @@ function setEventListeners(){
     }
 }
 
+
+
+//----------------------------------------------------------------------------
+
+// Handling mouse events
+
+// Adapted from www.learningwebgl.com
+
+
+var mouseDown = false;
+
+var lastMouseX = null;
+
+var lastMouseY = null;
+
+function handleMouseDown(event) {
+	
+    mouseDown = true;
+  
+    lastMouseX = event.clientX;
+  
+    lastMouseY = event.clientY;
+}
+
+function handleMouseUp(event) {
+
+    mouseDown = false;
+}
+
+function handleMouseMove(event) {
+
+    if (!mouseDown) {
+	  
+      return;
+    } 
+  
+    // Rotation angles proportional to cursor displacement
+    
+    var newX = event.clientX;
+  
+    var newY = event.clientY;
+
+    var deltaX = newX - lastMouseX;
+    
+    globalAngleYY -= radians( 10 * deltaX  )
+
+    var deltaY = newY - lastMouseY;
+    
+    globalAngleXX -= radians( 10 * deltaY  )
+    
+    lastMouseX = newX
+    
+    lastMouseY = newY;
+  }
+//----------------------------------------------------------------------------
+
+
+
 //----------------------------------------------------------------------------
 //
 // WebGL Initialization
@@ -676,7 +749,7 @@ function runWebGL() {
 
 	shaderProgram = initShaders( gl );
 	
-	setEventListeners();
+	setEventListeners(canvas);
 	
 	tick();		// A timer controls the rendering / animation    
 
