@@ -39,7 +39,7 @@ var globalAngleXX = 0.0;
 var globalAngleZZ = 0.0;
 
 
-var globalTz = 0.0;
+var globalTz = -2.5;
 
 var globalTx = 0.0;
 
