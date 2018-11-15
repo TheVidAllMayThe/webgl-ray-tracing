@@ -59,8 +59,6 @@ var primitiveType = null;
 
 // To allow choosing the projection type
 
-var projectionType = 1;
-
 // NEW --- The viewer position
 
 // It has to be updated according to the projection type
@@ -228,50 +226,27 @@ function drawScene() {
 	
 	// Computing the Projection Matrix
 	
-	if( projectionType == 0 ) {
-		
-		// For now, the default orthogonal view volume
-		
-		pMatrix = ortho( -1.0, 1.0, -1.0, 1.0, -1.0, 1.0 );
-		
-		// Global transformation !!
-		
-		globalTz = 0.0;
-		
-		// NEW --- The viewer is on the ZZ axis at an indefinite distance
-		
-		//pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[3] = 0.0;
-		
-		//pos_Viewer[2] = 1.0;  
-		
-		// TO BE DONE !
-		
-		// Allow the user to control the size of the view volume
-	}
-	else {	
+    // A standard view volume.
+    
+    // Viewer is at (0,0,0)
+    
+    // Ensure that the model is "inside" the view volume
+    
+    pMatrix = perspective( 45, width/height, 0.05, 200 );
+    
+    // Global transformation !!
+    
+    //globalTz = -2.5;
 
-		// A standard view volume.
-		
-		// Viewer is at (0,0,0)
-		
-		// Ensure that the model is "inside" the view volume
-		
-		pMatrix = perspective( 45, width/height, 0.05, 200 );
-		
-		// Global transformation !!
-		
-		//globalTz = -2.5;
-
-		// NEW --- The viewer is on (0,0,0)
-		
-		pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[2] = 0.0;
-		
-		pos_Viewer[3] = 1.0;  
-		
-		// TO BE DONE !
-		
-		// Allow the user to control the size of the view volume
-	}
+    // NEW --- The viewer is on (0,0,0)
+    
+    pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[2] = 0.0;
+    
+    pos_Viewer[3] = 1.0;  
+    
+    // TO BE DONE !
+    
+    // Allow the user to control the size of the view volume
 	
 	// Passing the Projection Matrix to apply the current projection
 	
@@ -478,6 +453,16 @@ function handleKeys() {
     }
 }
 
+// credits for this function: https://stackoverflow.com/questions/30970648/changing-hex-codes-to-rgb-values-with-javascript
+function hex_to_RGB(hex) {
+    var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+    return {
+        r: parseInt(m[1], 16),
+        g: parseInt(m[2], 16),
+        b: parseInt(m[3], 16)
+    };
+}
+
 function setEventListeners(canvas){
 
 	canvas.onmousedown = handleMouseDown;
@@ -493,76 +478,15 @@ function setEventListeners(canvas){
     document.onkeyup = function(event){
         currentlyPressedKeys[event.keyCode] = false;
     }
+    
+    document.getElementById("object-type").onchange = function(evt){
+        var t = document.getElementById("object-type").selectedIndex;
+        if(t == 2) document.getElementById("obj-file").click();
+    }
 	
-    // Dropdown list
-	
-	var projection = document.getElementById("projection-selection");
-	
-	projection.addEventListener("click", function(){
-				
-		// Getting the selection
-		
-		var p = projection.selectedIndex;
-				
-		switch(p){
-			
-			case 0 : projectionType = 0;
-				break;
-			
-			case 1 : projectionType = 1;
-				break;
-		}  	
-	});      
-
     document.getElementById("object-form-predefined").onsubmit = function(evt){
         evt.preventDefault();
 
-        var model = null;
-
-        var t = document.getElementById("object-type").selectedIndex;
-        switch(t) {
-            case 0: model = new cubeModel();
-                break;
-            case 1: model = new sphereModel();
-                break;
-        }
-
-        model.colors = [];
-        var colorArray = [document.getElementById("r-object").value/255, document.getElementById("g-object").value/255, document.getElementById("b-object").value/255];
-        
-        while(model.colors.length < model.vertices.length){
-            model.colors = model.colors.concat(colorArray);
-        }
-        
-        model.tx = document.getElementById("x-pos-predefined").value;
-        model.ty = document.getElementById("y-pos-predefined").value;
-        model.tz = document.getElementById("z-pos-predefined").value;
-                    
-        sceneModels.push(model);
-        
-    }
-
-    document.getElementById("light-form").onsubmit = function(evt){
-        evt.preventDefault();
-
-        var lightSource = new LightSource();
-
-        lightSource.setPosition( document.getElementById("x-pos-light").value , document.getElementById("y-pos-light").value, document.getElementById("z-pos-light").value, document.getElementById("light-type").selectedIndex );
-
-        lightSource.setIntensity( document.getElementById("r-light").value/255 , document.getElementById("g-light").value/255 ,document.getElementById("b-light").value/255 );
-
-        lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
-
-        lightSources.push( lightSource );
-        
-    }
-
-	document.getElementById("obj-file").onchange = function(){
-        file = this.files[0];
-	}
-
-    document.getElementById("object-form").onsubmit = function(evt){
-        evt.preventDefault();
         var reader = new FileReader();
         
         reader.onload = function( progressEvent ){
@@ -633,17 +557,67 @@ function setEventListeners(canvas){
             model.tz = document.getElementById("z-pos").value;
                         
             // To render the model just read
-			console.log(model.vertices)
-			while(model.vertices.length > model.colors.length){
-				model.colors.push(0.0)
-			}
-			console.log(model.colors)
+            model.colors = [];
+            var rgb = hex_to_RGB(document.getElementById("rgb-object").value);
+            var colorArray = [rgb["r"]/255, rgb["g"]/255, rgb["b"]/255];
+            
+            while(model.colors.length < model.vertices.length){
+                model.colors = model.colors.concat(colorArray);
+            }
+
             sceneModels.push(model);
-        };
+        }
+
+        var model = null;
+
+        var t = document.getElementById("object-type").selectedIndex;
+        switch(t) {
+            case 0: model = new cubeModel();
+                break;
+            case 1: model = new sphereModel();
+                break;
+            case 2: reader.readAsText( file );
+                break;
+        }
+
+        if( t < 2 ){
+            model.colors = [];
+            var rgb = hex_to_RGB(document.getElementById("rgb-object").value);
+            var colorArray = [rgb["r"]/255, rgb["g"]/255, rgb["b"]/255];
+            
+            while(model.colors.length < model.vertices.length){
+                model.colors = model.colors.concat(colorArray);
+            }
+            
+            model.tx = document.getElementById("x-pos-predefined").value;
+            model.ty = document.getElementById("y-pos-predefined").value;
+            model.tz = document.getElementById("z-pos-predefined").value;
+                        
+            sceneModels.push(model);
+        }
         
-        // Entire file read as a string
-        reader.readAsText( file );		
     }
+
+    document.getElementById("light-form").onsubmit = function(evt){
+        evt.preventDefault();
+
+        var lightSource = new LightSource();
+
+        lightSource.setPosition( document.getElementById("x-pos-light").value/255 , document.getElementById("y-pos-light").value/255, document.getElementById("z-pos-light").value/255, document.getElementById("light-type").selectedIndex );
+
+        var rgb = hex_to_RGB(document.getElementById("rgb-light").value);
+
+        lightSource.setIntensity( rgb["r"]/255, rgb["g"]/255, rgb["b"]/255 );
+
+        lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
+
+        lightSources.push( lightSource );
+        
+    }
+
+	document.getElementById("obj-file").onchange = function(){
+        file = this.files[0];
+	}
 }
 
 

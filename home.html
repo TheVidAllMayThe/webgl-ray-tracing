@@ -1,35 +1,17 @@
 <!DOCTYPE html>
 
 <html>
+<title>Ray Tracing</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+</style>
+
 
 <head>
-	
-<!--
-
-WebGL_example_NEW_GPU_per_vertex.html
-
-Phong Illumination Model on the GPU - Per vertex shading - Several light sources
-
-Scene made up of different models, with different features
-
-J. Madeira - November 2017 + November 2018
-
--->
-	
-<title>Ray Tracing</title>
-
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-<!--
-
-The vertex and fragment shaders.
-
-NEW VERTEX SHADER!
-
-The fragment shader is the same simple one.
-
--->
-
 <script id="shader-vs" type="x-shader/x-vertex">
 	
     attribute vec3 vPosition;
@@ -240,33 +222,77 @@ The fragment shader is the same simple one.
 
 </head>
 
+
 <body onload="runWebGL();">
 
-	<div style="text-align: center">
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-light-grey w3-animate-left w3-card" style="z-index:3;width:320px;">
+  <div class="w3-container w3-display-container w3-padding-16">
+    <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-transparent w3-display-topright"></i>
+	<h3>Welcome to our Ray Tracing project!</h3>
+    <h6>Please help us out by filling the empty canvas!</h6>
+    <hr>
+    <form id="object-form-predefined" method="POST" enctype="multipart/form-data">
+        <select class="w3-select" id="object-type" name="object-type">
+            <option value="cube">Cube</option>
+            <option value="sphere">Sphere</option>
+            <option value="file" onclick="">Upload OBJ file</option>
+            <option value="" disabled selected>Choose Object</option>
+        </select>
+        <input type="file" id="obj-file" name="file" style="display: none" >
+        </p>
+        <input class="w3-input w3-border w3-round-large" type="color" value="#ff0000" id="rgb-object" required/>
+        <div class="w3-row">
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="X" id="x-pos-predefined" name="x-pos" required/>
+            </div>
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-predefined" name="y-pos" required/>
+            </div>
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="Z" id="z-pos-predefined" name="z-pos" required/>
+            </div>
+        </div>
+        <p><button class="w3-button w3-block w3-green w3-left-align" type="submit"><i class="fa fa-plus w3-margin-right"></i>Create object</button></p>
+    </form>
+    <form id="light-form">
+        <select class="w3-select" id="light-type" name="light-type">
+            <option value="directional">Directional</option>
+            <option value="vectorial">Vectorial</option>
+            <option value="" disabled selected>Choose type of Lightsource</option>
+        </select>
+        <input class="w3-input w3-border w3-round-large" type="color" value="#ffffff" id="rgb-light" required/>
+        <div class="w3-row">
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="X" id="x-pos-light" name="x-pos" required/>
+            </div>
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-light" name="y-pos" required/>
+            </div>
+            <div class="w3-third">
+                <input class="w3-input w3-border" type="number" placeholder="Z" id="z-pos-light" name="z-pos" required/>
+            </div>
+        </div>
+        <p><button class="w3-button w3-block w3-green w3-left-align" type="submit"><i class="fa fa-plus w3-margin-right"></i>Create lightsource</button></p>
+    </form>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+  <span class="w3-bar-item">Add Objects</span>
+  <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<div class="w3-main" style="margin-left:320px;">
 		
 		<canvas id="my-canvas" style="border:1px solid #000000;" width="1000" height="600"></canvas>
 
-		<p>Hi! Welcome to our Ray Tracing project, please help us out by filling the empty canvas above!</p>
 
-        <p>Add an object:
-		<form id="object-form-predefined">
-            <select id="object-type" name="object-type">
-                <option value="cube">Cube</option>
-                <option value="sphere">Sphere</option>
-            </select>
-            <input type="number" placeholder="r" id ="r-object" name="r-object" min="0" max="255"/>
-            <input type="number" placeholder="g" id ="g-object" name="g-object" min="0" max="255"/>
-            <input type="number" placeholder="b" id ="b-object" name="b-object" min="0" max="255"/>
-            <input type="number" placeholder="x position" id="x-pos-predefined" name="x-pos"/>
-            <input type="number" placeholder="y position" id="y-pos-predefined" name="y-pos"/>
-            <input type="number" placeholder="z position" id="z-pos-predefined" name="z-pos"/>
-            <input value="Create Object" id="submit-form" type="submit"/>
-        </form>
-		</p>
         
         <p>or load an object yourself:
-		<form id="object-form" method="POST" enctype="multipart/form-data">
-            <input type="file" id="obj-file" name="file">
             <input type="number" placeholder="x position" id="x-pos" name="x-pos"/>
             <input type="number" placeholder="y position" id="y-pos" name="y-pos"/>
             <input type="number" placeholder="z position" id="z-pos" name="z-pos"/>
@@ -274,30 +300,6 @@ The fragment shader is the same simple one.
         </form>
 		</p>
 
-        <p>Add a light:
-		<form id="light-form">
-            <select id="light-type" name="light-type">
-                <option value="directional">Directional</option>
-                <option value="vectorial">Vectorial</option>
-            </select>
-            <input type="number" placeholder="r" id ="r-light" name="r-light" min="0" max="255"/>
-            <input type="number" placeholder="g" id ="g-light" name="g-light" min="0" max="255"/>
-            <input type="number" placeholder="b" id ="b-light" name="b-light" min="0" max="255"/>
-            <input type="number" placeholder="x position" id="x-pos-light" name="x-pos"/>
-            <input type="number" placeholder="y position" id="y-pos-light" name="y-pos"/>
-            <input type="number" placeholder="z position" id="z-pos-light" name="z-pos"/>
-            <input value="Create Object" id="submit-form" type="submit"/>
-        </form>
-		</p>
-
-		<p>Choose the <b>projection type</b>:
-		
-        <select id="projection-selection">
-			<option value="0">Orthogonal Projection</option>
-			<option value="1">Perspective Projection</option>
-        </select>
-        
-        </p>
         <p> You can move the camera with WASD </p>
         <p>
 		
