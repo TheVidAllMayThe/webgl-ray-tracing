@@ -625,6 +625,17 @@ function setEventListeners(canvas){
 	document.getElementById("obj-file").onchange = function(){
         file = this.files[0];
 	}
+
+    document.getElementById("reset-button").onclick = function(){
+        sceneModels = sceneModels.slice(0,1);
+        lightSources = lightSources.slice(0,1);
+        globalAngleYY = 0.0;
+        globalAngleXX = 0.0;
+        globalAngleZZ = 0.0;
+        globalTz = -2.5;
+        globalTx = 0.0;
+        globalTy = 0.0;
+    }
 }
 
 
