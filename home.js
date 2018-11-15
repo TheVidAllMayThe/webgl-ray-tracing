@@ -214,13 +214,15 @@ function drawModel( model,
 		}
 		lightPos[3] = lightSources[i].getPosition()[3]
 
-		
+		/*
 		if(i){
+			
 			console.log('Global T: ' + vec3(globalTx, globalTy, globalTz))
 			console.log('LightSourcePos: ' + lightSources[i].getPosition())
 			console.log('LightPos: ' + lightPos)
 			console.log('\n')
-		}
+			
+		}*/
 
 		gl.uniform4fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].position"),
 			flatten(lightPos));
