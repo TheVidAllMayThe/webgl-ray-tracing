@@ -199,9 +199,31 @@ function drawModel( model,
 	{
 		gl.uniform1i( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].isOn"),
 			lightSources[i].isOn );
-    
+	
+		
+		lightPos = vec4()
+		if(lightSources[i].getPosition()[3] == 1.0){
+			lightPos[0] = lightSources[i].getPosition()[0] + globalTx
+			lightPos[1] = lightSources[i].getPosition()[1] + globalTy
+			lightPos[2] = lightSources[i].getPosition()[2] + globalTz
+		}
+		else{
+			lightPos[0] = lightSources[i].getPosition()[0]
+			lightPos[1] = lightSources[i].getPosition()[1]
+			lightPos[2] = lightSources[i].getPosition()[2]
+		}
+		lightPos[3] = lightSources[i].getPosition()[3]
+
+		
+		if(i){
+			console.log('Global T: ' + vec3(globalTx, globalTy, globalTz))
+			console.log('LightSourcePos: ' + lightSources[i].getPosition())
+			console.log('LightPos: ' + lightPos)
+			console.log('\n')
+		}
+
 		gl.uniform4fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].position"),
-			flatten(lightSources[i].getPosition()) );
+			flatten(lightPos));
     
 		gl.uniform3fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].intensities"),
 			flatten(lightSources[i].getIntensity()) );
@@ -284,25 +306,25 @@ function drawScene() {
 				
 			// COMPLETE THE CODE FOR THE OTHER ROTATION AXES
 
-			if( lightSources[i].isRotYYOn() ) 
+			if( lightSources[i].isRotYYOn() || globalAngleYY != 0 ) 
 			{
 				lightSourceMatrix = mult( 
 						lightSourceMatrix, 
-						rotationYYMatrix( lightSources[i].getRotAngleYY() ) );
+						rotationYYMatrix( lightSources[i].getRotAngleYY() + globalAngleYY ) );
 			}
 
-			if( lightSources[i].isRotXXOn() ) 
+			if( lightSources[i].isRotXXOn() || globalAngleYY != 0 ) 
 			{
 				lightSourceMatrix = mult( 
 						lightSourceMatrix, 
-						rotationYYMatrix( lightSources[i].getRotAngleXX() ) );
+						rotationYYMatrix( lightSources[i].getRotAngleXX() + globalAngleXX ) );
 			}
 
-			if( lightSources[i].isRotZZOn() ) 
+			if( lightSources[i].isRotZZOn() || globalAngleZZ != 0) 
 			{
 				lightSourceMatrix = mult( 
 						lightSourceMatrix, 
-						rotationYYMatrix( lightSources[i].getRotAngleZZ() ) );
+						rotationYYMatrix( lightSources[i].getRotAngleZZ() + globalAngleZZ ) );
 			}
 		}
 		
