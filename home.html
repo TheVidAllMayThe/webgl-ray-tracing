@@ -167,10 +167,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 		   // Adding the components
 		
-           fColor += ambient + diffuse + specular + vec4(vColor, 1.0);
+           vec4 ambientColor = vec4(vColor, 1.0) * ambient;
+           fColor += ambientColor + diffuse + specular;
 	   }
-       if (numLights == 0) fColor = vec4(vColor, 1.0); 
-        
 	}
     
 </script>

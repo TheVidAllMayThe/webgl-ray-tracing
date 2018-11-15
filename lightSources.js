@@ -213,3 +213,7 @@ LightSource.prototype.setRotationSpeed = function( s ) {
 //
 
 var lightSources = [];
+
+lightSources.push(new LightSource());
+lightSources[0].setIntensity(0.0,0.0,0.0);
+lightSources[0].setAmbIntensity(1.0, 1.0, 1.0);
