@@ -205,6 +205,9 @@ function drawModel( model,
     
 		gl.uniform3fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].intensities"),
 			flatten(lightSources[i].getIntensity()) );
+
+		gl.uniform3fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].ambientIntensities"),
+			flatten(lightSources[i].getAmbIntensity()) );
     }
 	// Drawing 
     gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems); 
@@ -612,7 +615,7 @@ function setEventListeners(canvas){
 
             lightSource.setIntensity( rgb["r"]/255, rgb["g"]/255, rgb["b"]/255 );
 
-            lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
+            lightSource.setAmbIntensity( 0.0, 0.0, 0.0 );
 
             lightSources.push( lightSource );
         }
