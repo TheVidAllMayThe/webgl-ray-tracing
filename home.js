@@ -558,6 +558,8 @@ function setEventListeners(canvas){
             model.tx = document.getElementById("x-pos").value;
             model.ty = document.getElementById("y-pos").value;
             model.tz = document.getElementById("z-pos").value;
+
+            model.sx = model.sy = model.sz = document.getElementById("size-object").value;
                         
             // To render the model just read
             model.colors = [];
@@ -595,6 +597,8 @@ function setEventListeners(canvas){
             model.tx = document.getElementById("x-pos-predefined").value;
             model.ty = document.getElementById("y-pos-predefined").value;
             model.tz = document.getElementById("z-pos-predefined").value;
+            model.sx = model.sy = model.sz = document.getElementById("size-object").value;
+            console.log(model.sx);
                         
             sceneModels.push(model);
         }
@@ -607,7 +611,7 @@ function setEventListeners(canvas){
         var lightSource = new LightSource();
         var t = document.getElementById("light-type").selectedIndex;
 
-        lightSource.setPosition( document.getElementById("x-pos-light").value/255 , document.getElementById("y-pos-light").value/255, document.getElementById("z-pos-light").value/255, t);
+        lightSource.setPosition( document.getElementById("x-pos-light").value , document.getElementById("y-pos-light").value, document.getElementById("z-pos-light").value, t);
 
         
         if (t < 2){
