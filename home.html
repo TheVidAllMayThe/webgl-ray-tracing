@@ -240,16 +240,23 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
         </select>
         <input type="file" id="obj-file" name="file" style="display: none" >
         </p>
-        <input class="w3-input w3-border w3-round-large" type="color" value="#ff0000" id="rgb-object" required/>
+        <div class="w3-row">
+            <div class="w3-quarter">
+                <input class="w3-input w3-border w3-round-large" type="color" value="#ff0000" id="rgb-object" required/>
+            </div>
+            <div class="w3-threequarter">
+                <input class="w3-input w3-border" type="range" min="0" max="1" step="0.1" id="size-object" required/>
+            </div>
+        </div>
         <div class="w3-row">
             <div class="w3-third">
-                <input class="w3-input w3-border" type="number" placeholder="X" id="x-pos-predefined" name="x-pos" required/>
+                <input class="w3-input w3-border" type="number" placeholder="X" id="x-pos-predefined" name="x-pos" min=-12 max=12 required/>
             </div>
             <div class="w3-third">
-                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-predefined" name="y-pos" required/>
+                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-predefined" name="y-pos" min=-1 required/>
             </div>
             <div class="w3-third">
-                <input class="w3-input w3-border" type="number" placeholder="Z" id="z-pos-predefined" name="z-pos" required/>
+                <input class="w3-input w3-border" type="number" placeholder="Z" id="z-pos-predefined" name="z-pos" min=-12 max=12 required/>
             </div>
         </div>
         <p><button class="w3-button w3-block w3-green w3-left-align" type="submit"><i class="fa fa-plus w3-margin-right"></i>Create object</button></p>
@@ -266,7 +273,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
                 <input class="w3-input w3-border" type="number" placeholder="X" id="x-pos-light" name="x-pos" required/>
             </div>
             <div class="w3-third">
-                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-light" name="y-pos" required/>
+                <input class="w3-input w3-border" type="number" placeholder="Y" id="y-pos-light" name="y-pos" min=-1 required/>
             </div>
             <div class="w3-third">
                 <input class="w3-input w3-border" type="number" placeholder="Z" id="z-pos-light" name="z-pos" required/>
