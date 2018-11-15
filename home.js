@@ -602,16 +602,20 @@ function setEventListeners(canvas){
         evt.preventDefault();
 
         var lightSource = new LightSource();
+        var t = document.getElementById("light-type").selectedIndex;
 
-        lightSource.setPosition( document.getElementById("x-pos-light").value/255 , document.getElementById("y-pos-light").value/255, document.getElementById("z-pos-light").value/255, document.getElementById("light-type").selectedIndex );
+        lightSource.setPosition( document.getElementById("x-pos-light").value/255 , document.getElementById("y-pos-light").value/255, document.getElementById("z-pos-light").value/255, t);
 
-        var rgb = hex_to_RGB(document.getElementById("rgb-light").value);
+        
+        if (t < 2){
+            var rgb = hex_to_RGB(document.getElementById("rgb-light").value);
 
-        lightSource.setIntensity( rgb["r"]/255, rgb["g"]/255, rgb["b"]/255 );
+            lightSource.setIntensity( rgb["r"]/255, rgb["g"]/255, rgb["b"]/255 );
 
-        lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
+            lightSource.setAmbIntensity( 0.2, 0.2, 0.2 );
 
-        lightSources.push( lightSource );
+            lightSources.push( lightSource );
+        }
         
     }
 
