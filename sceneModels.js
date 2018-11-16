@@ -146,7 +146,7 @@ function simplePiramidViewerModel( ) {
 	computeVertexNormals( piramid.vertices, piramid.normals );
 
 	piramid.getCenterVector = function getCenterVector(){
-		return piramid.ver[0].map((a, i) => (a + piramid.ver[0][i]+ piramid.ver[1][i]+ piramid.ver[2][i]+ piramid.ver[3][i]))
+		return piramid.ver[0].map((a, i) => (a + piramid.ver[0][i]+ piramid.ver[1][i]+ piramid.ver[2][i]+ piramid.ver[3][i]) / 4).map((a,i) => piramid.ver[4][i] - a)
 	}
 	
 
