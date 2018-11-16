@@ -20,7 +20,9 @@ function emptyModelFeatures() {
 
 	this.normals = [];
 
-    this.colors = [];
+	this.colors = [];
+	
+	this.primitiveType = null
 
 	// Transformation parameters
 
@@ -113,7 +115,6 @@ function singleTriangleModel( ) {
 
 	return triangle;
 }
-
 
 
 

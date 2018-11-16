@@ -203,9 +203,9 @@ function drawModel( model,
 		
 		lightPos = vec4()
 		if(lightSources[i].getPosition()[3] == 1.0){
-			lightPos[0] = lightSources[i].getPosition()[0] + globalTx
-			lightPos[1] = lightSources[i].getPosition()[1] + globalTy
-			lightPos[2] = lightSources[i].getPosition()[2] + globalTz
+			lightPos[0] = Number(lightSources[i].getPosition()[0]) + globalTx
+			lightPos[1] = Number(lightSources[i].getPosition()[1]) + globalTy
+			lightPos[2] = Number(lightSources[i].getPosition()[2]) + globalTz
 		}
 		else{
 			lightPos[0] = lightSources[i].getPosition()[0]
@@ -216,14 +216,13 @@ function drawModel( model,
 
 		/*
 		if(i){
-			
 			console.log('Global T: ' + vec3(globalTx, globalTy, globalTz))
 			console.log('LightSourcePos: ' + lightSources[i].getPosition())
 			console.log('LightPos: ' + lightPos)
 			console.log('\n')
-			
-		}*/
-
+		}
+		*/
+		
 		gl.uniform4fv( gl.getUniformLocation(shaderProgram, "allLights[" + String(i) + "].position"),
 			flatten(lightPos));
     
@@ -339,11 +338,13 @@ function drawScene() {
 			
 	// Instantianting all scene models
 	
+	
+
 	for(var i = 0; i < sceneModels.length; i++ )
-	{ 
+	{
 		drawModel( sceneModels[i],
 			   mvMatrix,
-	           primitiveType );
+	           (sceneModels[i].primitiveType == null ? primitiveType : gl.LINE_STRIP));
 	}
 	           
 }
@@ -477,7 +478,13 @@ function handleKeys() {
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
-    }
+	}
+	
+	//SPACEBAR
+	if (currentlyPressedKeys[32]) {
+		//sceneModels.push(new simpletTetrahedronModel())
+	}
+
 }
 
 // credits for this function: https://stackoverflow.com/questions/30970648/changing-hex-codes-to-rgb-values-with-javascript
@@ -712,10 +719,14 @@ function handleMouseMove(event) {
     
     globalAngleYY -= radians( 10 * deltaX  )
 
+	//globalTx += radians( 10 * deltaX  )/ 10
+
     var deltaY = newY - lastMouseY;
     
     globalAngleXX -= radians( 10 * deltaY  )
-    
+	
+	//globalTy += radians( 10 * deltaY  )/ 10
+
     lastMouseX = newX
     
     lastMouseY = newY;
