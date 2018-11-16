@@ -260,7 +260,7 @@ function drawScene() {
     
     // Ensure that the model is "inside" the view volume
     
-    pMatrix = perspective( 45, width/height, 0.05, 200 );
+    pMatrix = perspective( 45, width/height, 0.001, 100 );
     
     // Global transformation !!
     
@@ -461,25 +461,30 @@ function handleKeys() {
 	}
     //A
     if (currentlyPressedKeys[65]) {
-        globalTx += 0.1;
+		globalTx += 0.1;
+		console.log(globalTx)
 	}
     //S
     if (currentlyPressedKeys[83]) {
 		globalTz -= 0.1;
+		console.log(globalTz)
     }
     //D
     if (currentlyPressedKeys[68]) {
 		globalTx -= 0.1;
+		console.log(globalTx)
 	}
 	
 	//E
 	if (currentlyPressedKeys[69]) {
 		globalTy -= 0.1;
+		console.log(globalTy)
 	}
 
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
+		console.log(globalTy)
 	}
 	
 	//SPACEBAR
@@ -488,10 +493,21 @@ function handleKeys() {
 			sceneModels.splice(pyramidPos)
 			pyramidPos = null
 		}
-		sceneModels.push(new simplepyramidViewerModel())
+
+		pyramidTrans = mult( translationMatrix( -globalTx, -globalTy, -globalTz ),
+		rotationYYMatrix( -globalAngleYY ) );
+		pyramidTrans = mult(rotationXXMatrix(-globalAngleXX), pyramidTrans)
+		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans)
+
+		pyramid = new simplepyramidViewerModel()
+		console.log(pyramid.vertices)
+		//pyramid.applyTransformation(pyramidTrans)
+		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz-0.002, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
+		console.log(pyramid.vertices)
+		sceneModels.push(pyramid)
 		
 		pyramidPos = sceneModels.length - 1
-		console.log(sceneModels[pyramidPos].getCenterVector())
+		
 	}
 
 }
@@ -728,7 +744,6 @@ function handleMouseMove(event) {
     
     globalAngleYY -= radians( 10 * deltaX  )
 
-	//globalTx += radians( 10 * deltaX  )/ 10
 
     var deltaY = newY - lastMouseY;
     

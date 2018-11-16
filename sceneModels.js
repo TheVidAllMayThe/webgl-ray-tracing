@@ -147,7 +147,31 @@ function simplepyramidViewerModel( ) {
 		return pyramid.ver[0].map((a, i) => (a + pyramid.ver[0][i]+ pyramid.ver[1][i]+ pyramid.ver[2][i]+ pyramid.ver[3][i]) / 4).map((a,i) => pyramid.ver[4][i] - a)
 	}
 	
-
+	
+	pyramid.applyTransformation = function applyTransformationShit(tx, ty, tz, gx, gy, gz){
+		this.tx = tx
+		this.ty = ty
+		this.tz = tz
+		this.rotAngleXX = gx
+		this.rotAngleYY = gy
+		this.rotAngleZZ = gz
+	}
+	
+	/*
+	pyramid.applyTransformation = function applytranformation(transformationMatrix){
+		
+		//console.log(this.vertices)
+		for(let i = 0 ; i < this.vertices.length; i+=3){
+			newCord = multiplyPointByMatrix(transformationMatrix, this.vertices.slice(i, i+3).concat(1.0))
+			this.vertices[i]   = newCord[0]
+			this.vertices[i+1] = newCord[1]
+			this.vertices[i+2] = newCord[2]
+		}
+		computeVertexNormals( this.vertices, this.normals)
+		//console.log(this.vertices)
+		
+	}
+	*/
 	return pyramid
 }
 
