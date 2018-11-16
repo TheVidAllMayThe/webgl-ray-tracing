@@ -238,3 +238,67 @@ function computeVertexNormals( coordsArray, normalsArray ) {
 	}
 }
 
+function isPointInTriangle( point, triangle, N ){
+    var A = triangle.slice(0,3);
+    var B = triangle.slice(3,6);
+    var C = triangle.slice(6,9);
+    var PC = [point[0] - C[0], point[1] - C[1], point[2] - C[2]];
+    var PB = [point[0] - B[0], point[1] - B[1], point[2] - B[2]];
+    var PA = [point[0] - A[0], point[1] - A[1], point[2] - A[2]];
+    var a = dotProduct(N, crossProduct(PB, PC));
+    var b = dotProduct(N, crossProduct(PC, PA));
+    var c = dotProduct(N, crossProduct(PA, PB));
+    return a >= 0 && b >= 0 && c >= 0;
+}
+
+function distance(a, b){
+    return Math.pow(Math.pow(a[0]-b[0],2) + Math.pow(a[1]-b[1],2) + Math.pow(a[2]-b[2],2) , 0.5);
+
+}
+
+function crossProduct(a, b){
+    return [ a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0] ];
+}
+
+function dotProduct(a, b){
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function intersectionPoint( origin, directionVector, model) {
+    var result = null;
+    var minDistance = Math.max();
+    var normalsArray = [];
+    computeVertexNormals( model.vertices, normalsArray );
+    
+    for( var index = 0; index < model.vertices.length; index += 9){
+        //vector normal to plane
+        var n = [normalsArray[index], normalsArray[index+1] ,normalsArray[index+2]];
+        //point in plane
+        var p0 = [model.vertices[index] , model.vertices[index+1], model.vertices[index+2]];
+        
+        var ln = dotProduct(n, directionVector);
+        //if ln == 0 then plane and line are parallel
+        if( ln != 0 ){
+            var p0l0 = [p0[0] - origin[0], p0[1] - origin[1], p0[2] - origin[2]];
+            var d = dotProduct(p0l0, n) / ln;
+
+            //Point of intersection of plane and line
+            var intersectPoint = [ d*directionVector[0] + origin[0], d*directionVector[1] + origin[1], d*directionVector[2] + origin[2]  ];
+            
+            //In case point is indeed in the triangle then see if it's the closest one to the origin point so far
+            if ( isPointInTriangle( intersectPoint, model.vertices.slice(index, index+9),n )){
+                if (result == null){
+                    result = intersectPoint;
+                }
+            }
+            else{
+               if (distance(intersectPoint, origin) < minDistance){
+                    minDistance = distance(intersectPoint, origin);
+                    result = intersectPoint;
+                }
+            }
+        }
+    }
+    return result;
+}
+
