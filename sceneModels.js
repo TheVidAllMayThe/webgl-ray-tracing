@@ -128,16 +128,14 @@ function simplePiramidViewerModel( ) {
 
 	piramid.primitiveType = "LineLoop"
 	
-	piramid.ver = [[-0.5, 0.0, -0.5], //1
-		   [ 0.5, 0.0, -0.5], //2
-		   [ 0.5, 0.0,  0.5], //3
-		   [-0.5, 0.0,  0.5], //4
-		   [ 0.0, 1.0,  0.0]  //5
+	piramid.ver = [[-1.0, 0.6, -1.0], //1
+		   [-1.0,-0.6, -1.0], //2
+		   [ 1.0,-0.6, -1.0], //3
+		   [ 1.0, 0.6, -1.0], //4
+		   [ 0.0, 0.0,  0.0]  //5
 		]
 
 	piramid.vertices = piramid.ver[0].concat(piramid.ver[4],piramid.ver[3],piramid.ver[0],piramid.ver[4],piramid.ver[1],piramid.ver[4],piramid.ver[1],piramid.ver[2],piramid.ver[4],piramid.ver[3],piramid.ver[2],piramid.ver[1])
-	
-	console.log(piramid.vertices)
 
 	while(piramid.colors.length < piramid.vertices.length){
 		piramid.colors.push(0.0)
