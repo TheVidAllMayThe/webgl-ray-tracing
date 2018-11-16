@@ -55,6 +55,8 @@ var globalRotationYY_SPEED = 1;
 
 // To allow choosing the way of drawing the model triangles
 
+var piramidPos = null
+
 var primitiveType = null;
 
 // To allow choosing the projection type
@@ -344,7 +346,7 @@ function drawScene() {
 	{
 		drawModel( sceneModels[i],
 			   mvMatrix,
-	           (sceneModels[i].primitiveType == null ? primitiveType : gl.LINE_STRIP));
+	           (sceneModels[i].primitiveType == 'Triangles' ? primitiveType : gl.LINE_LOOP));
 	}
 	           
 }
@@ -482,7 +484,12 @@ function handleKeys() {
 	
 	//SPACEBAR
 	if (currentlyPressedKeys[32]) {
-		//sceneModels.push(new simpletTetrahedronModel())
+		if(piramidPos != null){
+			sceneModels.splice(piramidPos)
+			piramidPos = null
+		}
+		sceneModels.push(new simplePiramidViewerModel())
+		piramidPos = sceneModels.length - 1
 	}
 
 }

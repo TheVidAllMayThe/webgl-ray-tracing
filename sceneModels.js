@@ -22,7 +22,7 @@ function emptyModelFeatures() {
 
 	this.colors = [];
 	
-	this.primitiveType = null
+	this.primitiveType = "Triangles"
 
 	// Transformation parameters
 
@@ -117,7 +117,34 @@ function singleTriangleModel( ) {
 }
 
 
+function simplePiramidViewerModel( ) {
+	var piramid = new emptyModelFeatures();
 
+	piramid.rotXXOn = false
+	piramid.rotYYOn = false
+	piramid.rotZZOn = false
+
+	piramid.primitiveType = "LineLoop"
+	
+	ver = [[-0.5, 0.0, -0.5], //1
+		   [ 0.5, 0.0, -0.5], //2
+		   [ 0.5, 0.0,  0.5], //3
+		   [-0.5, 0.0,  0.5], //4
+		   [ 0.0, 1.0,  0.0]  //5
+		]
+
+	piramid.vertices = ver[0].concat(ver[4],ver[3],ver[0],ver[4],ver[1],ver[4],ver[1],ver[2],ver[4],ver[3],ver[2],ver[1])
+	
+	console.log(piramid.vertices)
+
+	while(piramid.colors.length < piramid.vertices.length){
+		piramid.colors.push(0.0)
+	}
+
+	computeVertexNormals( piramid.vertices, piramid.normals );
+
+	return piramid
+}
 
 function simpleCubeModel( ) {
 	
