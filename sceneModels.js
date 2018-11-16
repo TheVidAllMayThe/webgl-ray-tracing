@@ -119,36 +119,36 @@ function singleTriangleModel( ) {
 }
 
 
-function simplePiramidViewerModel( ) {
-	var piramid = new emptyModelFeatures();
+function simplepyramidViewerModel( ) {
+	var pyramid = new emptyModelFeatures();
 
-	piramid.rotXXOn = false
-	piramid.rotYYOn = false
-	piramid.rotZZOn = false
+	pyramid.rotXXOn = false
+	pyramid.rotYYOn = false
+	pyramid.rotZZOn = false
 
-	piramid.primitiveType = "LineLoop"
+	pyramid.primitiveType = "LineLoop"
 	
-	piramid.ver = [[-1.0, 0.6, -1.0], //1
+	pyramid.ver = [[-1.0, 0.6, -1.0], //1
 		   [-1.0,-0.6, -1.0], //2
 		   [ 1.0,-0.6, -1.0], //3
 		   [ 1.0, 0.6, -1.0], //4
 		   [ 0.0, 0.0,  0.0]  //5
 		]
 
-	piramid.vertices = piramid.ver[0].concat(piramid.ver[4],piramid.ver[3],piramid.ver[0],piramid.ver[4],piramid.ver[1],piramid.ver[4],piramid.ver[1],piramid.ver[2],piramid.ver[4],piramid.ver[3],piramid.ver[2],piramid.ver[1])
+	pyramid.vertices = pyramid.ver[0].concat(pyramid.ver[4],pyramid.ver[3],pyramid.ver[0],pyramid.ver[4],pyramid.ver[1],pyramid.ver[4],pyramid.ver[1],pyramid.ver[2],pyramid.ver[4],pyramid.ver[3],pyramid.ver[2],pyramid.ver[1])
 
-	while(piramid.colors.length < piramid.vertices.length){
-		piramid.colors.push(0.0)
+	while(pyramid.colors.length < pyramid.vertices.length){
+		pyramid.colors.push(0.0)
 	}
 
-	computeVertexNormals( piramid.vertices, piramid.normals );
+	computeVertexNormals( pyramid.vertices, pyramid.normals );
 
-	piramid.getCenterVector = function getCenterVector(){
-		return piramid.ver[0].map((a, i) => (a + piramid.ver[0][i]+ piramid.ver[1][i]+ piramid.ver[2][i]+ piramid.ver[3][i]))
+	pyramid.getCenterVector = function getCenterVector(){
+		return pyramid.ver[0].map((a, i) => (a + pyramid.ver[0][i]+ pyramid.ver[1][i]+ pyramid.ver[2][i]+ pyramid.ver[3][i]) / 4).map((a,i) => pyramid.ver[4][i] - a)
 	}
 	
 
-	return piramid
+	return pyramid
 }
 
 function simpleCubeModel( ) {
