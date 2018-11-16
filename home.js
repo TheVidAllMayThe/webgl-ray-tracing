@@ -448,7 +448,6 @@ function tick() {
 //
 
 function outputInfos(){
-    
 }
 
 //----------------------------------------------------------------------------
@@ -654,11 +653,11 @@ function setEventListeners(canvas){
             model.ty = document.getElementById("y-pos-predefined").value;
             model.tz = document.getElementById("z-pos-predefined").value;
             model.sx = model.sy = model.sz = document.getElementById("size-object").value;
-            console.log(model.sx);
                         
             sceneModels.push(model);
         }
         
+        console.log(intersectionPoint([0.0, 0.0, 0.0], [0.0, 0.0, -1.0], sceneModels[1]));
     }
 
     document.getElementById("light-form").onsubmit = function(evt){
