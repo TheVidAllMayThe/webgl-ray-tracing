@@ -18,6 +18,8 @@ function emptyModelFeatures() {
 
 	this.vertices = [];
 
+	this.ver = [];
+
 	this.normals = [];
 
 	this.colors = [];
@@ -35,7 +37,7 @@ function emptyModelFeatures() {
 	this.tz = 0.0;	
 	
 	// Rotation angles	
-	
+
 	this.rotAngleXX = 0.0;
 	
 	this.rotAngleYY = 0.0;
@@ -126,22 +128,25 @@ function simplePiramidViewerModel( ) {
 
 	piramid.primitiveType = "LineLoop"
 	
-	ver = [[-1.0, 0.6, -1.0], //1
+	piramid.ver = [[-1.0, 0.6, -1.0], //1
 		   [-1.0,-0.6, -1.0], //2
 		   [ 1.0,-0.6, -1.0], //3
 		   [ 1.0, 0.6, -1.0], //4
 		   [ 0.0, 0.0,  0.0]  //5
 		]
 
-	piramid.vertices = ver[0].concat(ver[4],ver[3],ver[0],ver[4],ver[1],ver[4],ver[1],ver[2],ver[4],ver[3],ver[2],ver[1])
-	
-	console.log(piramid.vertices)
+	piramid.vertices = piramid.ver[0].concat(piramid.ver[4],piramid.ver[3],piramid.ver[0],piramid.ver[4],piramid.ver[1],piramid.ver[4],piramid.ver[1],piramid.ver[2],piramid.ver[4],piramid.ver[3],piramid.ver[2],piramid.ver[1])
 
 	while(piramid.colors.length < piramid.vertices.length){
 		piramid.colors.push(0.0)
 	}
 
 	computeVertexNormals( piramid.vertices, piramid.normals );
+
+	piramid.getCenterVector = function getCenterVector(){
+		return piramid.ver[0].map((a, i) => (a + piramid.ver[0][i]+ piramid.ver[1][i]+ piramid.ver[2][i]+ piramid.ver[3][i]))
+	}
+	
 
 	return piramid
 }
