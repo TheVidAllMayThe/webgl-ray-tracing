@@ -55,7 +55,7 @@ var globalRotationYY_SPEED = 1;
 
 // To allow choosing the way of drawing the model triangles
 
-var piramidPos = null
+var pyramidPos = null
 
 var primitiveType = null;
 
@@ -484,12 +484,14 @@ function handleKeys() {
 	
 	//SPACEBAR
 	if (currentlyPressedKeys[32]) {
-		if(piramidPos != null){
-			sceneModels.splice(piramidPos)
-			piramidPos = null
+		if(pyramidPos != null){
+			sceneModels.splice(pyramidPos)
+			pyramidPos = null
 		}
-		sceneModels.push(new simplePiramidViewerModel())
-		piramidPos = sceneModels.length - 1
+		sceneModels.push(new simplepyramidViewerModel())
+		
+		pyramidPos = sceneModels.length - 1
+		console.log(sceneModels[pyramidPos].getCenterVector())
 	}
 
 }
