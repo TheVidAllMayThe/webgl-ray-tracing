@@ -126,11 +126,11 @@ function simplePiramidViewerModel( ) {
 
 	piramid.primitiveType = "LineLoop"
 	
-	ver = [[-0.5, 0.0, -0.5], //1
-		   [ 0.5, 0.0, -0.5], //2
-		   [ 0.5, 0.0,  0.5], //3
-		   [-0.5, 0.0,  0.5], //4
-		   [ 0.0, 1.0,  0.0]  //5
+	ver = [[-1.0, 0.6, -1.0], //1
+		   [-1.0,-0.6, -1.0], //2
+		   [ 1.0,-0.6, -1.0], //3
+		   [ 1.0, 0.6, -1.0], //4
+		   [ 0.0, 0.0,  0.0]  //5
 		]
 
 	piramid.vertices = ver[0].concat(ver[4],ver[3],ver[0],ver[4],ver[1],ver[4],ver[1],ver[2],ver[4],ver[3],ver[2],ver[1])
