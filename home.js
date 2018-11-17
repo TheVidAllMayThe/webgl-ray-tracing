@@ -466,7 +466,7 @@ var currentlyPressedKeys = {};
 function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
-		console.log(globalAngleYY)
+		
 		globalTz += Math.cos(radians(globalAngleYY)) * 0.1;
 		globalTx += -Math.sin(radians(globalAngleYY)) * 0.1;
 	}
@@ -474,7 +474,7 @@ function handleKeys() {
     if (currentlyPressedKeys[65]) {
 		globalTx += Math.cos(radians(globalAngleYY)) * 0.1;
 		globalTz += Math.sin(radians(globalAngleYY)) * 0.1;
-		console.log(globalTx)
+		
 	}
     //S
     if (currentlyPressedKeys[83]) {
@@ -482,25 +482,24 @@ function handleKeys() {
 		globalTx -= -Math.sin(radians(globalAngleYY)) * 0.1;
 		
 		//globalTz -= 0.1;
-		console.log(globalTz)
     }
     //D
     if (currentlyPressedKeys[68]) {
 		globalTx -= Math.cos(radians(globalAngleYY)) * 0.1;
 		globalTz -= Math.sin(radians(globalAngleYY)) * 0.1;
-		console.log(globalTx)
+		
 	}
 	
 	//E
 	if (currentlyPressedKeys[69]) {
 		globalTy -= 0.1;
-		console.log(globalTy)
+		
 	}
 
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
-		console.log(globalTy)
+		
 	}
 	
 	//SPACEBAR
@@ -517,10 +516,10 @@ function handleKeys() {
 		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans)
 		*/
 		pyramid = new simplepyramidViewerModel()
-		console.log(pyramid.vertices)
+		//console.log(pyramid.vertices)
 		//pyramid.applyTransformation(pyramidTrans)
 		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
-		console.log(pyramid.vertices)
+		//console.log(pyramid.vertices)
 		sceneModels.push(pyramid)
 		
 		pyramidPos = sceneModels.length - 1
