@@ -684,24 +684,22 @@ function setEventListeners(canvas){
     }
 
     document.getElementById("camera-frame").onclick = function(evt){
-		var x = (evt.offsetX/500) - 1;
+		var x = (-evt.offsetX/500) + 1;
 		
-        var y = (-evt.offsetY/500) + 0.6; 
+        var y = (evt.offsetY/500) - 0.6; 
         var vector = [x , y, -1];
 
 
         var origin = sceneModels[pyramidPos];
 
-        var transMatrix = mult( translationMatrix( -origin.tx, -origin.ty, -origin.tz), rotationYYMatrix(origin.rotAngleYY));
-        transMatrix = mult( transMatrix, rotationXXMatrix(-origin.rotAngleXX));
-        transMatrix = mult( transMatrix, rotationZZMatrix(-origin.rotAngleZZ));
+        var transMatrix = mult( translationMatrix( origin.tx, origin.ty, origin.tz), rotationYYMatrix(origin.rotAngleYY));
+        transMatrix = mult( transMatrix, rotationXXMatrix(origin.rotAngleXX));
+        transMatrix = mult( transMatrix, rotationZZMatrix(origin.rotAngleZZ));
         transMatrix = mult( transMatrix, scalingMatrix( origin.sx, origin.sy, origin.sz));
 
         vector = multiplyPointByMatrix(transMatrix, vector.concat(1.0)).slice(0,3);
 
         var p2 = intersectionPoint( [origin.tx, origin.ty, origin.tz], vector, sceneModels ); 
-        console.log(origin.tx, origin.ty, origin.tz);
-        console.log(p2);
         if(p2 != null){
             var line = new lineModel();
             line.vertices = [];
@@ -712,8 +710,6 @@ function setEventListeners(canvas){
             line.vertices.push(p2[1]);
             line.vertices.push(p2[2]);
    
-            console.log(line.vertices);
-
             sceneModels.push(line);
         }
     }

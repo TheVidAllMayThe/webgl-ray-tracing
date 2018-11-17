@@ -284,6 +284,8 @@ function intersectionPoint( origin, directionVector, models) {
                 transMatrix = mult( transMatrix, scalingMatrix( model.sx, model.sy, model.sz));
                 
                 var p0 = multiplyPointByMatrix(transMatrix, model.vertices.slice(0,3).concat(1.0)).slice(0,3);
+
+                n = multiplyPointByMatrix(transMatrix, n.concat(1.0)).slice(0,3);
                 
                 
                 var ln = dotProduct(n, directionVector);
@@ -301,14 +303,9 @@ function intersectionPoint( origin, directionVector, models) {
                         triangleVertices = triangleVertices.concat( multiplyPointByMatrix(transMatrix, model.vertices.slice(j, j+3).concat(1.0)).slice(0,3));
                     }
                     if ( isPointInTriangle( intersectPoint, triangleVertices ,n )){
-                        if (result == null){
+                       if (result == null || distance(intersectPoint, origin) < minDistance){
+                            minDistance = distance(intersectPoint, origin);
                             result = intersectPoint;
-                        }
-                        else{
-                           if (distance(intersectPoint, origin) < minDistance){
-                                minDistance = distance(intersectPoint, origin);
-                                result = intersectPoint;
-                            }
                         }
                     }
                 }
