@@ -288,7 +288,8 @@ function drawScene() {
         flatten(pos_Viewer) );
 	
 	// GLOBAL TRANSFORMATION FOR THE WHOLE SCENE
-	
+	/*
+
 	mvMatrix = mult( translationMatrix( globalTx, globalTy, globalTz ),
 		rotationYYMatrix( globalAngleYY ) );
 
@@ -296,7 +297,16 @@ function drawScene() {
 
 	mvMatrix = mult(rotationZZMatrix(globalAngleZZ), mvMatrix)
 	// NEW - Updating the position of the light sources, if required
-	
+	*/
+
+	mvMatrix = rotationYYMatrix( globalAngleYY );
+
+	mvMatrix = mult(rotationXXMatrix(globalAngleXX), mvMatrix)
+
+	mvMatrix = mult(rotationZZMatrix(globalAngleZZ), mvMatrix)
+
+	mvMatrix = mult(mvMatrix, translationMatrix( globalTx, globalTy, globalTz ))
+
 	// FOR EACH LIGHT SOURCE
 	    
 	for(var i = 0; i < lightSources.length; i++ )
@@ -456,21 +466,28 @@ var currentlyPressedKeys = {};
 function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
-		globalTz += 0.1;
+		console.log(globalAngleYY)
+		globalTz += Math.cos(radians(globalAngleYY)) * 0.1;
+		globalTx += -Math.sin(radians(globalAngleYY)) * 0.1;
 	}
     //A
     if (currentlyPressedKeys[65]) {
-		globalTx += 0.1;
+		globalTx += Math.cos(radians(globalAngleYY)) * 0.1;
+		globalTz += Math.sin(radians(globalAngleYY)) * 0.1;
 		console.log(globalTx)
 	}
     //S
     if (currentlyPressedKeys[83]) {
-		globalTz -= 0.1;
+		globalTz -= Math.cos(radians(globalAngleYY)) * 0.1;
+		globalTx -= -Math.sin(radians(globalAngleYY)) * 0.1;
+		
+		//globalTz -= 0.1;
 		console.log(globalTz)
     }
     //D
     if (currentlyPressedKeys[68]) {
-		globalTx -= 0.1;
+		globalTx -= Math.cos(radians(globalAngleYY)) * 0.1;
+		globalTz -= Math.sin(radians(globalAngleYY)) * 0.1;
 		console.log(globalTx)
 	}
 	
@@ -493,15 +510,16 @@ function handleKeys() {
 			pyramidPos = null
 		}
 
+		/*
 		pyramidTrans = mult( translationMatrix( -globalTx, -globalTy, -globalTz ),
 		rotationYYMatrix( -globalAngleYY ) );
 		pyramidTrans = mult(rotationXXMatrix(-globalAngleXX), pyramidTrans)
 		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans)
-
+		*/
 		pyramid = new simplepyramidViewerModel()
 		console.log(pyramid.vertices)
 		//pyramid.applyTransformation(pyramidTrans)
-		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz-0.002, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
+		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
 		console.log(pyramid.vertices)
 		sceneModels.push(pyramid)
 		
