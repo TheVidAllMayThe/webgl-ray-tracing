@@ -274,7 +274,8 @@ function intersectionPoint( origin, directionVector, model) {
         //vector normal to plane
         var n = [normalsArray[index], normalsArray[index+1] ,normalsArray[index+2]];
         //point in plane
-        var p0 = [model.vertices[index] , model.vertices[index+1], model.vertices[index+2]];
+        //HOW TO APPLY ROTATION
+        var p0 = [model.sx*model.vertices[index]+Number(model.tx) , model.sy*model.vertices[index+1]+Number(model.ty), model.sz*model.vertices[index+2]+Number(model.tz)];
         
         var ln = dotProduct(n, directionVector);
         //if ln == 0 then plane and line are parallel
@@ -286,15 +287,21 @@ function intersectionPoint( origin, directionVector, model) {
             var intersectPoint = [ d*directionVector[0] + origin[0], d*directionVector[1] + origin[1], d*directionVector[2] + origin[2]  ];
             
             //In case point is indeed in the triangle then see if it's the closest one to the origin point so far
-            if ( isPointInTriangle( intersectPoint, model.vertices.slice(index, index+9),n )){
+            var triangleVertices = model.vertices.slice(index, index+9);
+            for (var j = 0; j < triangleVertices.length; j += 3){
+                triangleVertices[j] = model.sx*triangleVertices[j] + Number(model.tx);
+                triangleVertices[j+1] = model.sy*triangleVertices[j+1] + Number(model.ty);
+                triangleVertices[j+2] = model.sz*triangleVertices[j+2] + Number(model.tz);
+            }
+            if ( isPointInTriangle( intersectPoint, triangleVertices ,n )){
                 if (result == null){
                     result = intersectPoint;
                 }
-            }
-            else{
-               if (distance(intersectPoint, origin) < minDistance){
-                    minDistance = distance(intersectPoint, origin);
-                    result = intersectPoint;
+                else{
+                   if (distance(intersectPoint, origin) < minDistance){
+                        minDistance = distance(intersectPoint, origin);
+                        result = intersectPoint;
+                    }
                 }
             }
         }

@@ -674,8 +674,6 @@ function setEventListeners(canvas){
                         
             sceneModels.push(model);
         }
-        
-        console.log(intersectionPoint([0.0, 0.0, 0.0], [0.0, 0.0, -1.0], sceneModels[1]));
     }
 
     document.getElementById("light-form").onsubmit = function(evt){
