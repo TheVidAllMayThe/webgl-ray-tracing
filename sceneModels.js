@@ -142,6 +142,10 @@ function simplepyramidViewerModel( ) {
 	pyramid.rotYYOn = false
 	pyramid.rotZZOn = false
 
+    pyramid.sx = 1.0;
+    pyramid.sy = 1.0;
+    pyramid.sz = 1.0;
+
 	pyramid.primitiveType = "LineLoop"
 	
 	pyramid.ver = [[-1.0, 0.6, -1.0], //1

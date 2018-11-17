@@ -270,7 +270,7 @@ function intersectionPoint( origin, directionVector, models) {
 
     for( var k=0; k < models.length; k++){
         var model = models[k];
-        if(models[k].PrimitiveType == "Triangles"){
+        if(models[k].primitiveType == "Triangles"){
             var normalsArray = [];
             computeVertexNormals( model.vertices, normalsArray );
             
