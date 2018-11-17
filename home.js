@@ -235,7 +235,7 @@ function drawModel( model,
 			flatten(lightSources[i].getAmbIntensity()) );
     }
 	// Drawing 
-    gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems); 
+    gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems);
 }
 
 //----------------------------------------------------------------------------
@@ -466,7 +466,7 @@ var currentlyPressedKeys = {};
 function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
-		
+
 		globalTz += Math.cos(radians(globalAngleYY)) * 0.1;
 		globalTx += -Math.sin(radians(globalAngleYY)) * 0.1;
 	}
@@ -493,13 +493,11 @@ function handleKeys() {
 	//E
 	if (currentlyPressedKeys[69]) {
 		globalTy -= 0.1;
-		
 	}
 
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
-		
 	}
 	
 	//SPACEBAR
@@ -532,7 +530,7 @@ function handleKeys() {
 	
 		// After 3 seconds, remove the show class from DIV
 		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 1500);
-		
+
 	}
 
 }
@@ -636,9 +634,9 @@ function setEventListeners(canvas){
                 computeVertexNormals( model.vertices, model.normals );
             }
 
-            model.tx = document.getElementById("x-pos").value;
-            model.ty = document.getElementById("y-pos").value;
-            model.tz = document.getElementById("z-pos").value;
+            model.tx = Number(document.getElementById("x-pos").value);
+            model.ty = Number(document.getElementById("y-pos").value);
+            model.tz = Number(document.getElementById("z-pos").value);
 
             model.sx = model.sy = model.sz = document.getElementById("size-object").value;
                         
@@ -675,12 +673,36 @@ function setEventListeners(canvas){
                 model.colors = model.colors.concat(colorArray);
             }
             
-            model.tx = document.getElementById("x-pos-predefined").value;
-            model.ty = document.getElementById("y-pos-predefined").value;
-            model.tz = document.getElementById("z-pos-predefined").value;
-            model.sx = model.sy = model.sz = document.getElementById("size-object").value;
+            model.tx = Number(document.getElementById("x-pos-predefined").value);
+            model.ty = Number(document.getElementById("y-pos-predefined").value);
+            model.tz = Number(document.getElementById("z-pos-predefined").value);
+            model.sx = model.sy = model.sz = Number(document.getElementById("size-object").value);
                         
             sceneModels.push(model);
+        }
+    }
+
+    document.getElementById("camera-frame").onclick = function(evt){
+        var x = (evt.offsetX/500) - 1;
+        var y = (evt.offsetY/500) + 0.6; 
+        var vector = [x , y, 1];
+
+        var origin = sceneModels[pyramidPos];
+        
+        var p2 = intersectionPoint( origin.ver[4], vector, sceneModels ); 
+        if(p2 != null){
+            var line = new lineModel();
+            line.vertices = [];
+            line.vertices.push(origin.tx);
+            line.vertices.push(origin.ty);
+            line.vertices.push(origin.tz);
+            line.vertices.push(p2[0]);
+            line.vertices.push(p2[1]);
+            line.vertices.push(p2[2]);
+   
+            console.log(line.vertices);
+
+            sceneModels.push(line);
         }
     }
 

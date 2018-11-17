@@ -54,11 +54,11 @@ function emptyModelFeatures() {
 	
 	// Animation controls
 	
-	this.rotXXOn = true;
+	this.rotXXOn = false;
 	
-	this.rotYYOn = true;
+	this.rotYYOn = false;
 	
-	this.rotZZOn = true;
+	this.rotZZOn = false;
 	
 	this.rotXXSpeed = 1.0;
 	
@@ -81,6 +81,22 @@ function emptyModelFeatures() {
 	this.kSpec = [ 0.7, 0.7, 0.7 ];
 
 	this.nPhong = 100;
+}
+
+function lineModel( ) {
+    var line = new emptyModelFeatures();
+    line.vertices = [0.0, 0.0, 0.0,
+                    0.0, 0.0, -1.0];
+
+    line.primitiveType = "Line";
+    line.sx = line.sy = line.sz = 1.0;
+
+	while(line.colors.length < line.vertices.length){
+		line.colors.push(0.0);
+        line.normals.push(0.0);
+	}
+
+    return line;
 }
 
 function singleTriangleModel( ) {
@@ -178,8 +194,8 @@ function simplepyramidViewerModel( ) {
 		computeVertexNormals( this.vertices, this.normals)
 		//console.log(this.vertices)
 		
-	}
-	*/
+	}*/
+	
 	return pyramid
 }
 
