@@ -502,6 +502,7 @@ function handleKeys() {
 	
 	//SPACEBAR
 	if (currentlyPressedKeys[32]) {
+		
 		if(pyramidPos != null){
 			sceneModels.splice(pyramidPos)
 			pyramidPos = null
@@ -529,7 +530,7 @@ function handleKeys() {
 		x.className = "show";
 	
 		// After 3 seconds, remove the show class from DIV
-		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 1500);
+		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 
 	}
 
@@ -684,7 +685,7 @@ function setEventListeners(canvas){
 
     document.getElementById("camera-frame").onclick = function(evt){
         var x = (evt.offsetX/500) - 1;
-        var y = (evt.offsetY/500) + 0.6; 
+        var y = (evt.offsetY/500) + 0.6;
         var vector = [x , y, 1];
 
         var origin = sceneModels[pyramidPos];
@@ -732,6 +733,8 @@ function setEventListeners(canvas){
 	}
 
     document.getElementById("reset-button").onclick = function(){
+		
+		pyramidPos = null
         sceneModels = sceneModels.slice(0,1);
         lightSources = lightSources.slice(0,1);
         globalAngleYY = 0.0;
