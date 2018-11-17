@@ -151,11 +151,19 @@ function simplepyramidViewerModel( ) {
 		   [ 0.0, 0.0,  0.0]  //5
 		]
 
+	color = [[0.0, 0.0, 0.2],
+		 [0.0, 0.0, 0.2],
+		 [0.0, 0.0, 0.2],
+		 [0.0, 0.0, 0.2],
+		 [0.0, 1.0, 0.0]]
+
 	pyramid.vertices = pyramid.ver[0].concat(pyramid.ver[4],pyramid.ver[3],pyramid.ver[0],pyramid.ver[4],pyramid.ver[1],pyramid.ver[4],pyramid.ver[1],pyramid.ver[2],pyramid.ver[4],pyramid.ver[3],pyramid.ver[2],pyramid.ver[1])
 
+	pyramid.colors = color[0].concat(color[4],color[3],color[0],color[4],color[1],color[4],color[1],color[2],color[4],color[3],color[2],color[1])
+	/*
 	while(pyramid.colors.length < pyramid.vertices.length){
 		pyramid.colors.push(0.0)
-	}
+	}*/
 
 	computeVertexNormals( pyramid.vertices, pyramid.normals );
 
