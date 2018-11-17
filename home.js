@@ -235,7 +235,7 @@ function drawModel( model,
 			flatten(lightSources[i].getAmbIntensity()) );
     }
 	// Drawing 
-    gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems); 
+    gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems);
 }
 
 //----------------------------------------------------------------------------
@@ -456,34 +456,29 @@ var currentlyPressedKeys = {};
 function handleKeys() {
     //W
 	if (currentlyPressedKeys[87]) {
-		globalTz += 0.1;
+        globalTz += 0.1;
 	}
     //A
     if (currentlyPressedKeys[65]) {
 		globalTx += 0.1;
-		console.log(globalTx)
 	}
     //S
     if (currentlyPressedKeys[83]) {
 		globalTz -= 0.1;
-		console.log(globalTz)
     }
     //D
     if (currentlyPressedKeys[68]) {
 		globalTx -= 0.1;
-		console.log(globalTx)
 	}
 	
 	//E
 	if (currentlyPressedKeys[69]) {
 		globalTy -= 0.1;
-		console.log(globalTy)
 	}
 
 	//Q
 	if (currentlyPressedKeys[81]) {
 		globalTy += 0.1;
-		console.log(globalTy)
 	}
 	
 	//SPACEBAR
@@ -493,16 +488,13 @@ function handleKeys() {
 			pyramidPos = null
 		}
 
-		pyramidTrans = mult( translationMatrix( -globalTx, -globalTy, -globalTz ),
-		rotationYYMatrix( -globalAngleYY ) );
-		pyramidTrans = mult(rotationXXMatrix(-globalAngleXX), pyramidTrans)
-		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans)
+		pyramidTrans = mult(rotationYYMatrix( -globalAngleYY ), rotationXXMatrix(-globalAngleXX));
+		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans);
+		pyramidTrans = mult( translationMatrix( -globalTx, -globalTy, -globalTz ), pyramidTrans);
 
 		pyramid = new simplepyramidViewerModel()
-		console.log(pyramid.vertices)
 		//pyramid.applyTransformation(pyramidTrans)
 		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz-0.002, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
-		console.log(pyramid.vertices)
 		sceneModels.push(pyramid)
 		
 		pyramidPos = sceneModels.length - 1
@@ -610,9 +602,9 @@ function setEventListeners(canvas){
                 computeVertexNormals( model.vertices, model.normals );
             }
 
-            model.tx = document.getElementById("x-pos").value;
-            model.ty = document.getElementById("y-pos").value;
-            model.tz = document.getElementById("z-pos").value;
+            model.tx = Number(document.getElementById("x-pos").value);
+            model.ty = Number(document.getElementById("y-pos").value);
+            model.tz = Number(document.getElementById("z-pos").value);
 
             model.sx = model.sy = model.sz = document.getElementById("size-object").value;
                         
@@ -649,12 +641,36 @@ function setEventListeners(canvas){
                 model.colors = model.colors.concat(colorArray);
             }
             
-            model.tx = document.getElementById("x-pos-predefined").value;
-            model.ty = document.getElementById("y-pos-predefined").value;
-            model.tz = document.getElementById("z-pos-predefined").value;
-            model.sx = model.sy = model.sz = document.getElementById("size-object").value;
+            model.tx = Number(document.getElementById("x-pos-predefined").value);
+            model.ty = Number(document.getElementById("y-pos-predefined").value);
+            model.tz = Number(document.getElementById("z-pos-predefined").value);
+            model.sx = model.sy = model.sz = Number(document.getElementById("size-object").value);
                         
             sceneModels.push(model);
+        }
+    }
+
+    document.getElementById("camera-frame").onclick = function(evt){
+        var x = (evt.offsetX/500) - 1;
+        var y = (evt.offsetY/500) + 0.6; 
+        var vector = [x , y, 1];
+
+        var origin = sceneModels[pyramidPos];
+        
+        var p2 = intersectionPoint( origin.ver[4], vector, sceneModels ); 
+        if(p2 != null){
+            var line = new lineModel();
+            line.vertices = [];
+            line.vertices.push(origin.tx);
+            line.vertices.push(origin.ty);
+            line.vertices.push(origin.tz);
+            line.vertices.push(p2[0]);
+            line.vertices.push(p2[1]);
+            line.vertices.push(p2[2]);
+   
+            console.log(line.vertices);
+
+            sceneModels.push(line);
         }
     }
 
