@@ -504,7 +504,12 @@ function handleKeys() {
 	if (currentlyPressedKeys[32]) {
 		
 		if(pyramidPos != null){
-			sceneModels.splice(pyramidPos)
+
+			for(let ind = sceneModels.length - 1; ind >= pyramidPos; ind--){
+				if(sceneModels[ind].primitiveType != 'Triangles'){
+					sceneModels.splice(ind, 1)
+				}
+			}
 			pyramidPos = null
 		}
 
@@ -529,6 +534,7 @@ function handleKeys() {
 		// Add the "show" class to DIV
 		x.className = "show";
 	
+		x.innerHTML = 'Camera position changed'
 		// After 3 seconds, remove the show class from DIV
 		setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 
@@ -684,6 +690,19 @@ function setEventListeners(canvas){
     }
 
     document.getElementById("camera-frame").onclick = function(evt){
+
+		if(pyramidPos == null){
+			var x = document.getElementById("snackbar");
+
+			// Add the "show" class to DIV
+			x.className = "show";
+		
+			x.innerHTML = 'You have to place a camera first!'
+			// After 3 seconds, remove the show class from DIV
+			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+			return
+		}
+
 		var x = (-evt.offsetX/500) + 1;
 		
         var y = (evt.offsetY/500) - 0.6; 
