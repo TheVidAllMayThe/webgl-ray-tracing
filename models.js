@@ -238,7 +238,7 @@ function computeVertexNormals( coordsArray, normalsArray ) {
 	}
 }
 
-function isPointInTriangle( point, triangle, N ){
+/*function isPointInTriangle( point, triangle, N ){
     var A = triangle.slice(0,3);
     var B = triangle.slice(3,6);
     var C = triangle.slice(6,9);
@@ -249,11 +249,23 @@ function isPointInTriangle( point, triangle, N ){
     var b = dotProduct(N, crossProduct(PC, PA));
     var c = dotProduct(N, crossProduct(PA, PB));
     return a >= 0 && b >= 0 && c >= 0;
+}*/
+
+function SameSide(p1,p2, a,b){
+    var BA = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+    var P1A = [p1[0] - a[0], p1[1] - a[1], p1[2] - a[2]];
+    var P2A = [p2[0] - a[0], p2[1] - a[1], p2[2] - a[2]];
+    var cp1 = crossProduct(BA, P1A)
+    var cp2 = crossProduct(BA, P2A)
+    return dotProduct(cp1, cp2) >= 0;
+}
+
+function isPointInTriangle(p, a,b,c){
+    return SameSide(p,a, b,c) && SameSide(p,b, a,c) && SameSide(p,c, a,b);
 }
 
 function distance(a, b){
     return Math.pow(Math.pow(a[0]-b[0],2) + Math.pow(a[1]-b[1],2) + Math.pow(a[2]-b[2],2) , 0.5);
-
 }
 
 function crossProduct(a, b){
@@ -302,7 +314,7 @@ function intersectionPoint( origin, directionVector, models) {
                     for (var j = index; j < index+9; j += 3){
                         triangleVertices = triangleVertices.concat( multiplyPointByMatrix(transMatrix, model.vertices.slice(j, j+3).concat(1.0)).slice(0,3));
                     }
-                    if ( isPointInTriangle( intersectPoint, triangleVertices ,n )){
+                    if ( isPointInTriangle( intersectPoint, triangleVertices.slice(0,3), triangleVertices.slice(3,6), triangleVertices.slice(6,9) )){
                        if (result == null || distance(intersectPoint, origin) < minDistance){
                             minDistance = distance(intersectPoint, origin);
                             result = intersectPoint;
