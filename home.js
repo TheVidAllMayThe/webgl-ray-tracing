@@ -718,8 +718,10 @@ function setEventListeners(canvas){
         vector = [vector[0] - origin.tx, vector[1] - origin.ty, vector[2] - origin.tz];
 
         var recursiveLevel = document.getElementById("recursive-level").value;
-        var startPoint = [origin.tx, origin.ty, origin.tz];
-        for(var i = 0; i < recursiveLevel; i++){
+		var startPoint = [origin.tx, origin.ty, origin.tz];
+		randColor = [Math.random(), Math.random(),Math.random()]
+		console.log(randColor)
+		for(var i = 0; i < recursiveLevel; i++){
             var result = intersectionPoint( startPoint, vector, sceneModels );
             if(result == null) break;
 
@@ -733,7 +735,14 @@ function setEventListeners(canvas){
             line.vertices.push(endPoint[0]);
             line.vertices.push(endPoint[1]);
             line.vertices.push(endPoint[2]);
-   
+			
+			line.colors = []
+			
+			while(line.colors.length < line.vertices.length){
+				line.colors.push(randColor[0], randColor[1], randColor[2])
+			}
+
+			console.log(line.colors)
             sceneModels.push(line);
 
             startPoint = endPoint;
@@ -898,8 +907,9 @@ function runWebGL() {
 	var canvas = document.getElementById("my-canvas");
 	initWebGL( canvas );
     height = canvas.height;
-    width = canvas.width;
-
+	width = canvas.width;
+	gl.lineWidth(3.5);
+	//console.log(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE))
 	shaderProgram = initShaders( gl );
 	
 	setEventListeners(canvas);
