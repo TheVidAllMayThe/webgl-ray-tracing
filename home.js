@@ -703,33 +703,42 @@ function setEventListeners(canvas){
 			return
 		}
 
-		var x = (-evt.offsetX/500) + 1;
-		
-        var y = (evt.offsetY/500) - 0.6; 
+		var x = (evt.offsetX/500) - 1;
+        var y = (-evt.offsetY/500) + 0.6; 
         var vector = [x , y, -1];
-
 
         var origin = sceneModels[pyramidPos];
 
-        var transMatrix = mult( translationMatrix( origin.tx, origin.ty, origin.tz), rotationYYMatrix(origin.rotAngleYY));
-        transMatrix = mult( transMatrix, rotationXXMatrix(origin.rotAngleXX));
+        var transMatrix = mult( translationMatrix( origin.tx, origin.ty, origin.tz), rotationXXMatrix(origin.rotAngleXX));
+        transMatrix = mult( transMatrix, rotationYYMatrix(origin.rotAngleYY));
         transMatrix = mult( transMatrix, rotationZZMatrix(origin.rotAngleZZ));
         transMatrix = mult( transMatrix, scalingMatrix( origin.sx, origin.sy, origin.sz));
 
         vector = multiplyPointByMatrix(transMatrix, vector.concat(1.0)).slice(0,3);
+        vector = [vector[0] - origin.tx, vector[1] - origin.ty, vector[2] - origin.tz];
 
-        var p2 = intersectionPoint( [origin.tx, origin.ty, origin.tz], vector, sceneModels ); 
-        if(p2 != null){
+        var recursiveLevel = document.getElementById("recursive-level").value;
+        var startPoint = [origin.tx, origin.ty, origin.tz];
+        for(var i = 0; i < recursiveLevel; i++){
+            var result = intersectionPoint( startPoint, vector, sceneModels );
+            if(result == null) break;
+
+            var endPoint = result[0];
+
             var line = new lineModel();
             line.vertices = [];
-            line.vertices.push(origin.tx);
-            line.vertices.push(origin.ty);
-            line.vertices.push(origin.tz);
-            line.vertices.push(p2[0]);
-            line.vertices.push(p2[1]);
-            line.vertices.push(p2[2]);
+            line.vertices.push(startPoint[0]);
+            line.vertices.push(startPoint[1]);
+            line.vertices.push(startPoint[2]);
+            line.vertices.push(endPoint[0]);
+            line.vertices.push(endPoint[1]);
+            line.vertices.push(endPoint[2]);
    
             sceneModels.push(line);
+
+            startPoint = endPoint;
+            var c1 = -dotProduct(result[1], vector);
+            vector = [vector[0] + 2*c1*result[1][0], vector[1] + 2*c1*result[1][1], vector[2] + 2*c1*result[1][2]];
         }
     }
 

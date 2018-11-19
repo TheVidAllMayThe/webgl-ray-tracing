@@ -251,12 +251,13 @@ function computeVertexNormals( coordsArray, normalsArray ) {
     return a >= 0 && b >= 0 && c >= 0;
 }*/
 
+//http://blackpawn.com/texts/pointinpoly/
 function SameSide(p1,p2, a,b){
     var BA = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
     var P1A = [p1[0] - a[0], p1[1] - a[1], p1[2] - a[2]];
     var P2A = [p2[0] - a[0], p2[1] - a[1], p2[2] - a[2]];
-    var cp1 = crossProduct(BA, P1A)
-    var cp2 = crossProduct(BA, P2A)
+    var cp1 = crossProduct(BA, P1A);
+    var cp2 = crossProduct(BA, P2A);
     return dotProduct(cp1, cp2) >= 0;
 }
 
@@ -283,22 +284,23 @@ function intersectionPoint( origin, directionVector, models) {
     for( var k=0; k < models.length; k++){
         var model = models[k];
         if(models[k].primitiveType == "Triangles"){
-            var normalsArray = [];
-            computeVertexNormals( model.vertices, normalsArray );
-            
             for( var index = 0; index < model.vertices.length; index += 9){
                 //vector normal to plane
-                var n = [normalsArray[index], normalsArray[index+1] ,normalsArray[index+2]];
+                var n = model.normals.slice(index,index+3);
                 //point in plane
                 var transMatrix = mult( translationMatrix( model.tx, model.ty, model.tz), rotationYYMatrix(model.rotAngleYY));
                 transMatrix = mult( transMatrix, rotationXXMatrix(model.rotAngleXX));
                 transMatrix = mult( transMatrix, rotationZZMatrix(model.rotAngleZZ));
                 transMatrix = mult( transMatrix, scalingMatrix( model.sx, model.sy, model.sz));
                 
-                var p0 = multiplyPointByMatrix(transMatrix, model.vertices.slice(0,3).concat(1.0)).slice(0,3);
+                var p0 = multiplyPointByMatrix(transMatrix, model.vertices.slice(index+0,index+3).concat(1.0)).slice(0,3);
 
-                n = multiplyPointByMatrix(transMatrix, n.concat(1.0)).slice(0,3);
-                
+                var n = [];
+                var triangleVertices = [];
+                for ( var v = index; v < index+9; v += 3){
+                    triangleVertices = triangleVertices.concat( multiplyPointByMatrix( transMatrix, model.vertices.slice(v, v+3).concat(1.0) ).slice(0,3));
+                }
+                computeVertexNormals(triangleVertices, n);
                 
                 var ln = dotProduct(n, directionVector);
                 //if ln == 0 then plane and line are parallel
@@ -306,18 +308,16 @@ function intersectionPoint( origin, directionVector, models) {
                     var p0l0 = [p0[0] - origin[0], p0[1] - origin[1], p0[2] - origin[2]];
                     var d = dotProduct(p0l0, n) / ln;
 
-                    //Point of intersection of plane and line
-                    var intersectPoint = [ d*directionVector[0] + origin[0], d*directionVector[1] + origin[1], d*directionVector[2] + origin[2]  ];
-                    
-                    //In case point is indeed in the triangle then see if it's the closest one to the origin point so far
-                    var triangleVertices = [];
-                    for (var j = index; j < index+9; j += 3){
-                        triangleVertices = triangleVertices.concat( multiplyPointByMatrix(transMatrix, model.vertices.slice(j, j+3).concat(1.0)).slice(0,3));
-                    }
-                    if ( isPointInTriangle( intersectPoint, triangleVertices.slice(0,3), triangleVertices.slice(3,6), triangleVertices.slice(6,9) )){
-                       if (result == null || distance(intersectPoint, origin) < minDistance){
-                            minDistance = distance(intersectPoint, origin);
-                            result = intersectPoint;
+                    if( d > 0){
+                        //Point of intersection of plane and line
+                        var intersectPoint = [ d*directionVector[0] + origin[0], d*directionVector[1] + origin[1], d*directionVector[2] + origin[2]  ];
+                        
+                        //In case point is indeed in the triangle then see if it's the closest one to the origin point so far
+                        if ( isPointInTriangle( intersectPoint, triangleVertices.slice(0,3), triangleVertices.slice(3,6), triangleVertices.slice(6,9) )){
+                           if (result == null || distance(intersectPoint, origin) < minDistance){
+                                minDistance = distance(intersectPoint, origin);
+                                result = [intersectPoint, n];
+                            }
                         }
                     }
                 }
