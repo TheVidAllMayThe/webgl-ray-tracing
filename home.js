@@ -767,6 +767,10 @@ function setEventListeners(canvas){
         file = this.files[0];
 	}
 
+    document.getElementById("recursive-level").onchange = function(){
+        document.getElementById("text-recursive-level").innerHTML = document.getElementById("recursive-level").value;
+    }
+
     document.getElementById("reset-button").onclick = function(){
 		
 		pyramidPos = null
