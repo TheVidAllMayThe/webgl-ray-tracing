@@ -84,3 +84,39 @@ function initShaders( gl ) {
 	
 	return shaderProgram;
 }
+
+
+function initShaders2( gl2 ) {
+	var fragmentShader2 = getShader(gl2, "shader-fs2");
+	var vertexShader2 = getShader(gl2, "shader-vs2");
+
+	var shaderProgram2 = gl2.createProgram();
+	gl2.attachShader(shaderProgram2, vertexShader2);
+	gl2.attachShader(shaderProgram2, fragmentShader2);
+	gl2.linkProgram(shaderProgram2);
+
+	if (!gl2.getProgramParameter(shaderProgram2, gl2.LINK_STATUS)) {
+		alert("Could not initialise shaders");
+	}
+
+	gl2.useProgram(shaderProgram2);
+	
+	// Shader input
+
+	// Vertex Coordinates 
+	
+	shaderProgram2.vertexPositionAttribute = gl2.getAttribLocation(shaderProgram2, "vPosition");
+	gl2.enableVertexAttribArray(shaderProgram2.vertexPositionAttribute);
+
+	// Vertex Normals 
+	
+	shaderProgram2.vertexNormalAttribute = gl2.getAttribLocation(shaderProgram2, "vNormal");
+	gl2.enableVertexAttribArray(shaderProgram2.vertexNormalAttribute);
+	
+	// Vertex Color
+
+	shaderProgram2.vertexColorAttribute = gl2.getAttribLocation(shaderProgram2, "vColor");
+	gl2.enableVertexAttribArray(shaderProgram2.vertexColorAttribute);
+	
+	return shaderProgram2;
+}

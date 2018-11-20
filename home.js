@@ -19,8 +19,10 @@ var width = null;
 var height = null;
 
 var gl = null; // WebGL context
+var gl2 = null; // WebGL context
 
 var shaderProgram = null;
+var shaderProgram2 = null;
 
 var file = null;
 
@@ -29,6 +31,13 @@ var triangleVertexPositionBuffer = null;
 var triangleVertexColorBuffer = null;
 
 var triangleVertexNormalBuffer = null;	
+
+
+var triangleVertexPositionBuffer2 = null;
+
+var triangleVertexColorBuffer2 = null;
+
+var triangleVertexNormalBuffer2 = null;	
 
 // The GLOBAL transformation parameters
 
@@ -99,6 +108,13 @@ function initBuffers( model ) {
 	triangleVertexPositionBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.vertices), gl.STATIC_DRAW);
+
+	/*
+	triangleVertexPositionBuffer2 = gl2.createBuffer();
+	gl2.bindBuffer(gl2.ARRAY_BUFFER, triangleVertexPositionBuffer2);
+	gl2.bufferData(gl2.ARRAY_BUFFER, new Float32Array(model.vertices), gl2.STATIC_DRAW);
+	*/
+
 	triangleVertexPositionBuffer.itemSize = 3;
 	triangleVertexPositionBuffer.numItems =  model.vertices.length / 3;			
 
@@ -107,7 +123,12 @@ function initBuffers( model ) {
 	gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 
 			triangleVertexPositionBuffer.itemSize, 
 			gl.FLOAT, false, 0, 0);
-	
+
+	/*
+	gl2.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 
+		triangleVertexPositionBuffer.itemSize, 
+		gl.FLOAT, false, 0, 0);
+	*/
 	// Vertex Normal Vectors
 		
 	triangleVertexNormalBuffer = gl.createBuffer();
@@ -136,6 +157,58 @@ function initBuffers( model ) {
             gl.FLOAT, false, 0 , 0);
 }
 
+function initBuffers2( model ) {	
+	
+	// Vertex Coordinates
+		
+	triangleVertexPositionBuffer2 = gl2.createBuffer();
+	gl2.bindBuffer(gl2.ARRAY_BUFFER, triangleVertexPositionBuffer2);
+	gl2.bufferData(gl2.ARRAY_BUFFER, new Float32Array(model.vertices), gl2.STATIC_DRAW);
+
+	/*
+	triangleVertexPositionBuffer2 = gl2.createBuffer();
+	gl2.bindBuffer(gl2.ARRAY_BUFFER, triangleVertexPositionBuffer2);
+	gl2.bufferData(gl2.ARRAY_BUFFER, new Float32Array(model.vertices), gl2.STATIC_DRAW);
+	*/
+
+	triangleVertexPositionBuffer2.itemSize = 3;
+	triangleVertexPositionBuffer2.numItems =  model.vertices.length / 3;			
+
+	// Associating to the vertex shader
+	
+	gl2.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 
+			triangleVertexPositionBuffer2.itemSize, 
+			gl2.FLOAT, false, 0, 0);
+
+	
+	// Vertex Normal Vectors
+		
+	triangleVertexNormalBuffer2 = gl2.createBuffer();
+	gl2.bindBuffer(gl2.ARRAY_BUFFER, triangleVertexNormalBuffer2);
+	gl2.bufferData(gl2.ARRAY_BUFFER, new Float32Array( model.normals), gl2.STATIC_DRAW);
+	triangleVertexNormalBuffer2.itemSize = 3;
+	triangleVertexNormalBuffer2.numItems = model.normals.length / 3;			
+
+	// Associating to the vertex shader
+	
+	gl2.vertexAttribPointer(shaderProgram.vertexNormalAttribute, 
+			triangleVertexNormalBuffer2.itemSize, 
+			gl2.FLOAT, false, 0, 0);	
+
+    // Colors
+    triangleVertexColorBuffer2 = gl2.createBuffer();
+    gl2.bindBuffer(gl2.ARRAY_BUFFER, triangleVertexColorBuffer2);
+    gl2.bufferData(gl2.ARRAY_BUFFER, new Float32Array(model.colors), gl2.STATIC_DRAW);
+    triangleVertexColorBuffer2.itemSize = 3;
+    triangleVertexColorBuffer2.numItems = model.colors.length / 3;
+
+    // Associating to the vertex shader
+    
+    gl2.vertexAttribPointer(shaderProgram.vertexColorAttribute,
+            triangleVertexColorBuffer2.itemSize,
+            gl2.FLOAT, false, 0 , 0);
+}
+
 //----------------------------------------------------------------------------
 
 //  Drawing the model
@@ -144,12 +217,15 @@ function drawModel( model,
 					mvMatrix,
 					primitiveType ) {
 
+	
 	// The the global model transformation is an input
 	
 	// Concatenate with the particular model transformations
 	
     // Pay attention to transformation order !!
-    
+	
+	gl.useProgram(shaderProgram)
+	
 	mvMatrix = mult( mvMatrix, translationMatrix( model.tx, model.ty, model.tz ) );
 						 
 	mvMatrix = mult( mvMatrix, rotationZZMatrix( model.rotAngleZZ ) );
@@ -238,19 +314,128 @@ function drawModel( model,
     gl.drawArrays(primitiveType, 0, triangleVertexPositionBuffer.numItems);
 }
 
+
+
+function drawModel2( model,
+	mvMatrix,
+	primitiveType ) {
+
+		
+	// The the global model transformation is an input
+
+	// Concatenate with the particular model transformations
+
+	// Pay attention to transformation order !!
+
+	gl2.useProgram(shaderProgram2)
+	mvMatrix = mult( mvMatrix, translationMatrix( model.tx, model.ty, model.tz ) );
+			
+	mvMatrix = mult( mvMatrix, rotationZZMatrix( model.rotAngleZZ ) );
+
+	mvMatrix = mult( mvMatrix, rotationYYMatrix( model.rotAngleYY ) );
+
+	mvMatrix = mult( mvMatrix, rotationXXMatrix( model.rotAngleXX ) );
+
+	mvMatrix = mult( mvMatrix, scalingMatrix( model.sx, model.sy, model.sz ) );
+			
+	// Passing the Model View Matrix to apply the current transformation
+
+	var mvUniform = gl2.getUniformLocation(shaderProgram2, "uMVMatrix");
+
+	gl2.uniformMatrix4fv(mvUniform, false, new Float32Array(flatten(mvMatrix)));
+
+	// Associating the data to the vertex shader
+
+	// This can be done in a better way !!
+
+	// Vertex Coordinates and Vertex Normal Vectors
+
+	
+	initBuffers2(model);
+
+	// Material properties
+
+	gl2.uniform3fv( gl2.getUniformLocation(shaderProgram2, "k_ambient"), 
+	flatten(model.kAmbi) );
+
+	gl2.uniform3fv( gl2.getUniformLocation(shaderProgram2, "k_diffuse"),
+	flatten(model.kDiff) );
+
+	gl2.uniform3fv( gl2.getUniformLocation(shaderProgram2, "k_specular"),
+	flatten(model.kSpec) );
+
+	gl2.uniform1f( gl2.getUniformLocation(shaderProgram2, "shininess"), 
+	model.nPhong );
+
+	// Light Sources
+
+	var numLights = lightSources.length;
+
+	gl2.uniform1i( gl2.getUniformLocation(shaderProgram2, "numLights"), 
+	numLights );
+
+
+
+	for(var i = 0; i < lightSources.length; i++ )
+	{
+		gl2.uniform1i( gl2.getUniformLocation(shaderProgram2, "allLights[" + String(i) + "].isOn"),
+		lightSources[i].isOn );
+
+
+		lightPos = vec4()
+		if(lightSources[i].getPosition()[3] == 1.0){
+			lightPos[0] = Number(lightSources[i].getPosition()[0]) + globalTx
+			lightPos[1] = Number(lightSources[i].getPosition()[1]) + globalTy
+			lightPos[2] = Number(lightSources[i].getPosition()[2]) + globalTz
+		}
+		else{
+			lightPos[0] = lightSources[i].getPosition()[0]
+			lightPos[1] = lightSources[i].getPosition()[1]
+			lightPos[2] = lightSources[i].getPosition()[2]
+		}
+		lightPos[3] = lightSources[i].getPosition()[3]
+
+		/*
+		if(i){
+		console.log('Global T: ' + vec3(globalTx, globalTy, globalTz))
+		console.log('LightSourcePos: ' + lightSources[i].getPosition())
+		console.log('LightPos: ' + lightPos)
+		console.log('\n')
+		}
+		*/
+
+		gl2.uniform4fv( gl2.getUniformLocation(shaderProgram2, "allLights[" + String(i) + "].position"),
+		flatten(lightPos));
+
+		gl2.uniform3fv( gl2.getUniformLocation(shaderProgram2, "allLights[" + String(i) + "].intensities"),
+		flatten(lightSources[i].getIntensity()) );
+
+		gl2.uniform3fv( gl2.getUniformLocation(shaderProgram2, "allLights[" + String(i) + "].ambientIntensities"),
+		flatten(lightSources[i].getAmbIntensity()) );
+	}
+	// Drawing 
+	gl2.drawArrays(primitiveType, 0, triangleVertexPositionBuffer2.numItems);
+}
+
 //----------------------------------------------------------------------------
 
 //  Drawing the 3D scene
 
 function drawScene() {
+	gl.useProgram(shaderProgram)
 	
 	var pMatrix;
 	
 	var mvMatrix = mat4();
+
+	var cam_mvMatrix = mat4();
 	
 	// Clearing the frame-buffer and the depth-buffer
 	
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+	//gl2.clear(gl2.COLOR_BUFFER_BIT | gl2.DEPTH_BUFFER_BIT);
 	
 	// Computing the Projection Matrix
 	
@@ -279,25 +464,16 @@ function drawScene() {
 	// Passing the Projection Matrix to apply the current projection
 	
 	var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+	//var pUniform2 = gl2.getUniformLocation(shaderProgram2, "uPMatrix");
 	
 	gl.uniformMatrix4fv(pUniform, false, new Float32Array(flatten(pMatrix)));
+	//gl2.uniformMatrix4fv(pUniform2, false, new Float32Array(flatten(pMatrix)));
 	
 	// NEW --- Passing the viewer position to the vertex shader
 	
 	gl.uniform4fv( gl.getUniformLocation(shaderProgram, "viewerPosition"),
-        flatten(pos_Viewer) );
-	
-	// GLOBAL TRANSFORMATION FOR THE WHOLE SCENE
-	/*
-
-	mvMatrix = mult( translationMatrix( globalTx, globalTy, globalTz ),
-		rotationYYMatrix( globalAngleYY ) );
-
-	mvMatrix = mult(rotationXXMatrix(globalAngleXX), mvMatrix)
-
-	mvMatrix = mult(rotationZZMatrix(globalAngleZZ), mvMatrix)
-	// NEW - Updating the position of the light sources, if required
-	*/
+		flatten(pos_Viewer) );
+		
 
 	mvMatrix = rotationYYMatrix( globalAngleYY );
 
@@ -344,8 +520,11 @@ function drawScene() {
 		// NEW Passing the Light Souree Matrix to apply
 	
 		var lsmUniform = gl.getUniformLocation(shaderProgram, "allLights["+ String(i) + "].lightSourceMatrix");
-	
+		
+		//var lsmUniform2 = gl2.getUniformLocation(shaderProgram2, "allLights["+ String(i) + "].lightSourceMatrix");
+
 		gl.uniformMatrix4fv(lsmUniform, false, new Float32Array(flatten(lightSourceMatrix)));
+		//gl2.uniformMatrix4fv(lsmUniform2, false, new Float32Array(flatten(lightSourceMatrix)));
 	}
 			
 	// Instantianting all scene models
@@ -360,6 +539,120 @@ function drawScene() {
 	}
 	           
 }
+
+
+function drawScene2() {
+	gl2.useProgram(shaderProgram2)
+	
+	var pMatrix;
+	
+	var mvMatrix = mat4();
+	
+	// Clearing the frame-buffer and the depth-buffer
+	
+	gl2.clear(gl2.COLOR_BUFFER_BIT | gl2.DEPTH_BUFFER_BIT);
+
+	// Computing the Projection Matrix
+	
+    // A standard view volume.
+    
+    // Viewer is at (0,0,0)
+    
+    // Ensure that the model is "inside" the view volume
+    
+    pMatrix = perspective( 45, width/height, 0.001, 100 );
+    
+    // Global transformation !!
+    
+    //globalTz = -2.5;
+
+    // NEW --- The viewer is on (0,0,0)
+    
+    pos_Viewer[0] = pos_Viewer[1] = pos_Viewer[2] = 0.0;
+    
+    pos_Viewer[3] = 1.0;  
+    
+    // TO BE DONE !
+    
+    // Allow the user to control the size of the view volume
+	
+	// Passing the Projection Matrix to apply the current projection
+	
+	var pUniform = gl2.getUniformLocation(shaderProgram2, "uPMatrix");
+	
+	
+	gl2.uniformMatrix4fv(pUniform, false, new Float32Array(flatten(pMatrix)));
+	
+	
+	// NEW --- Passing the viewer position to the vertex shader
+	
+	gl2.uniform4fv( gl2.getUniformLocation(shaderProgram2, "viewerPosition"),
+		flatten(pos_Viewer) );
+		
+
+	if(pyramidPos != null){
+		mvMatrix = rotationYYMatrix( -sceneModels[pyramidPos].rotAngleYY );
+		mvMatrix = mult(rotationXXMatrix( -sceneModels[pyramidPos].rotAngleXX), mvMatrix)
+		mvMatrix = mult(rotationZZMatrix( -sceneModels[pyramidPos].rotAngleZZ), mvMatrix)
+		mvMatrix = mult(mvMatrix, translationMatrix( -sceneModels[pyramidPos].tx, -sceneModels[pyramidPos].ty, -sceneModels[pyramidPos].tz ))
+	}
+	// FOR EACH LIGHT SOURCE
+	    
+	for(var i = 0; i < lightSources.length; i++ )
+	{
+		// Animating the light source, if defined
+		    
+		var lightSourceMatrix = mat4();
+
+		if( !lightSources[i].isOff() ) {
+				
+			// COMPLETE THE CODE FOR THE OTHER ROTATION AXES
+
+			if( lightSources[i].isRotYYOn() || globalAngleYY != 0 ) 
+			{
+				lightSourceMatrix = mult( 
+						lightSourceMatrix, 
+						rotationYYMatrix( lightSources[i].getRotAngleYY() + globalAngleYY ) );
+			}
+
+			if( lightSources[i].isRotXXOn() || globalAngleYY != 0 ) 
+			{
+				lightSourceMatrix = mult( 
+						lightSourceMatrix, 
+						rotationYYMatrix( lightSources[i].getRotAngleXX() + globalAngleXX ) );
+			}
+
+			if( lightSources[i].isRotZZOn() || globalAngleZZ != 0) 
+			{
+				lightSourceMatrix = mult( 
+						lightSourceMatrix, 
+						rotationYYMatrix( lightSources[i].getRotAngleZZ() + globalAngleZZ ) );
+			}
+		}
+		
+		// NEW Passing the Light Souree Matrix to apply
+	
+		var lsmUniform = gl2.getUniformLocation(shaderProgram2, "allLights["+ String(i) + "].lightSourceMatrix");
+		
+		//var lsmUniform2 = gl2.getUniformLocation(shaderProgram2, "allLights["+ String(i) + "].lightSourceMatrix");
+
+		gl2.uniformMatrix4fv(lsmUniform, false, new Float32Array(flatten(lightSourceMatrix)));
+		//gl2.uniformMatrix4fv(lsmUniform2, false, new Float32Array(flatten(lightSourceMatrix)));
+	}
+			
+	// Instantianting all scene models
+	
+	
+
+	for(var i = 0; i < sceneModels.length; i++ )
+	{
+		drawModel2( sceneModels[i],
+			   mvMatrix,
+	           (sceneModels[i].primitiveType == 'Triangles' ? primitiveType : gl2.LINE_LOOP));
+	}
+	           
+}
+
 
 //----------------------------------------------------------------------------
 //
@@ -446,7 +739,9 @@ function tick() {
 
     handleKeys();
 	
-	drawScene();
+	drawScene2();
+
+	drawScene();	
 	
 	animate();
 }
@@ -503,6 +798,10 @@ function handleKeys() {
 	//SPACEBAR
 	if (currentlyPressedKeys[32]) {
 		
+		document.getElementById("camera-frame").style.display = "none";
+		document.getElementById("cam-canvas").style.display = "block";
+
+
 		if(pyramidPos != null){
 
 			for(let ind = sceneModels.length - 1; ind >= pyramidPos; ind--){
@@ -520,6 +819,8 @@ function handleKeys() {
 		pyramidTrans = mult(rotationZZMatrix(-globalAngleZZ), pyramidTrans)
 		*/
 		pyramid = new simplepyramidViewerModel()
+
+		
 		//console.log(pyramid.vertices)
 		//pyramid.applyTransformation(pyramidTrans)
 		pyramid.applyTransformation(-globalTx, -globalTy, -globalTz, -globalAngleXX, -globalAngleYY, -globalAngleZZ)
@@ -687,10 +988,9 @@ function setEventListeners(canvas){
                         
             sceneModels.push(model);
         }
-    }
-
-    document.getElementById("camera-frame").onclick = function(evt){
-
+	}
+	
+	document.getElementById("camera-frame").onclick = function(evt){
 		if(pyramidPos == null){
 			var x = document.getElementById("snackbar");
 
@@ -702,7 +1002,11 @@ function setEventListeners(canvas){
 			setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 			return
 		}
+	}
 
+    document.getElementById("cam-canvas").onclick = function(evt){
+
+		
 		var x = (evt.offsetX/500) - 1;
         var y = (-evt.offsetY/500) + 0.6; 
         var vector = [x , y, -1];
@@ -783,6 +1087,8 @@ function setEventListeners(canvas){
     document.getElementById("reset-button").onclick = function(){
 		
 		pyramidPos = null
+		document.getElementById("camera-frame").style.display = "block";
+		document.getElementById("cam-canvas").style.display = "none";
         sceneModels = sceneModels.slice(0,1);
         lightSources = lightSources.slice(0,1);
         globalAngleYY = 0.0;
@@ -860,7 +1166,7 @@ function handleMouseMove(event) {
 // WebGL Initialization
 //
 
-function initWebGL( canvas ) {
+function initWebGL( canvas, cam_canvas ) {
 	try {
 		
 		// Create the WebGL context
@@ -868,7 +1174,7 @@ function initWebGL( canvas ) {
 		// Some browsers still need "experimental-webgl"
 		
 		gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-		
+		gl2 = cam_canvas.getContext("webgl") || cam_canvas.getContext("experimental-webgl");
 		// DEFAULT: The viewport occupies the whole canvas 
 		
 		// DEFAULT: The viewport background color is WHITE
@@ -882,16 +1188,18 @@ function initWebGL( canvas ) {
 		// Enable FACE CULLING
 		
 		gl.enable( gl.CULL_FACE );
-		
+		gl2.enable( gl2.CULL_FACE );
 		// DEFAULT: The BACK FACE is culled!!
 		
 		// The next instruction is not needed...
 		
 		gl.cullFace( gl.BACK );
+		gl2.cullFace( gl2.BACK );
 		
 		// Enable DEPTH-TEST
 		
 		gl.enable( gl.DEPTH_TEST );
+		gl2.enable( gl2.DEPTH_TEST );
         
 	} catch (e) {
 	}
@@ -905,12 +1213,19 @@ function initWebGL( canvas ) {
 function runWebGL() {
 	
 	var canvas = document.getElementById("my-canvas");
-	initWebGL( canvas );
+	var cam_canvas = document.getElementById("cam-canvas");
+
+	cam_canvas.style.display = "none";
+	
+	initWebGL( canvas, cam_canvas );
+
     height = canvas.height;
 	width = canvas.width;
 	gl.lineWidth(3.5);
-	//console.log(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE))
+	gl2.lineWidth(3.5);
+	
 	shaderProgram = initShaders( gl );
+	shaderProgram2 = initShaders2( gl2 );
 	
 	setEventListeners(canvas);
 	
